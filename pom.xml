@@ -298,7 +298,7 @@
 								<id>e2e-tests</id>
 								<configuration>
 									<includes>
-										<include>**/*e2e.java</include>
+										<include>**/*E2E.java</include>
 									</includes>
 								</configuration>
 								<goals>
