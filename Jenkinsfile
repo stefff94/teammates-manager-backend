@@ -5,6 +5,7 @@ pipeline {
             args '-v /root/.m2:/root/.m2'
         }
     }
+
     stages {
         stage('Build') {
             steps {
@@ -24,7 +25,7 @@ pipeline {
                 }
         stage('Deliver') {
                     steps {
-                        sh 'mvn -e clean heroku:deploy-war'
+                        sh 'mvn -e clean heroku:deploy'
                     }
                 }
     }
