@@ -325,5 +325,46 @@
 				</plugins>
 			</build>
 		</profile>
+		<profile>
+			<id>docker</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>io.fabric8</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<version>0.28.0</version>
+						<configuration>
+							<showLogs>true</showLogs>
+							<images>
+								<image>
+									<alias>db</alias>
+									<external>
+										<type>compose</type>
+										<baseDir>${project.basedir}/docker</baseDir>
+										<composeFile>docker-compose.yml</composeFile>
+									</external>
+								</image>
+							</images>
+						</configuration>
+						<executions>
+							<execution>
+								<id>docker:start</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>start</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>docker:stop</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>stop</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 </project>
