@@ -6,10 +6,6 @@ pipeline {
         }
     }
 
-    environment{
-        HEROKU_API_KEY = "6d895acb-9090-46bb-a967-14bb52e57984"
-    }
-
     stages {
         stage('Build') {
             steps {
