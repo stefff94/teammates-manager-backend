@@ -167,8 +167,7 @@
 					</includes>
 					<jdkVersion>1.8</jdkVersion>
 					<processTypes>
-						<web>java $JAVA_OPTS -jar -Dspring.profiles.active=prod
-							${project.build.directory}/${project.build.finalName}.jar</web>
+						<web>java $JAVA_OPTS -jar -Dserver.port=$PORT -Dspring.profiles.active=prod	target/${project.build.finalName}.jar</web>
 					</processTypes>
 				</configuration>
 			</plugin>
@@ -242,7 +241,7 @@
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
 							<!-- Code coverage for surefire tests -->
-							<argLine>${surefireArgLine}</argLine>
+							<argLine>@{surefireArgLine}</argLine>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -303,7 +302,7 @@
 								</goals>
 								<configuration>
 									<arguments>
-										<argument>--server.port=${tomcat.http.port}</argument>
+										<argument>--server.port=@{tomcat.http.port}</argument>
 									</arguments>
 								</configuration>
 							</execution>
@@ -334,7 +333,7 @@
 						</executions>
 						<configuration>
 							<systemPropertyVariables>
-								<server.port>${tomcat.http.port}</server.port>
+								<server.port>@{tomcat.http.port}</server.port>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>
