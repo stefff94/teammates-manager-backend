@@ -399,7 +399,6 @@
 										<exclude>**/*BDD.java</exclude>
 									</excludes>
 									<includes>
-										<!--<include>**/*E2E.java</include>-->
 										<include>**/*E2E.java</include>
 									</includes>
 								</configuration>
@@ -416,7 +415,6 @@
 										<exclude>**/*E2E.java</exclude>
 									</excludes>
 									<includes>
-										<!--<include>**/*E2E.java</include>-->
 										<include>**/*BDD.java</include>
 									</includes>
 								</configuration>
