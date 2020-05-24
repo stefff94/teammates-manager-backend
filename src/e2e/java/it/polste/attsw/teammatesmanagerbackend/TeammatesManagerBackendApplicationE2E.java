@@ -24,6 +24,7 @@ public class TeammatesManagerBackendApplicationE2E {
 
   @Test
   public void proofTest() {
+    logger.info(baseUrl + "/actuator/health");
     when().
             get(baseUrl + "/actuator/health").
     then().

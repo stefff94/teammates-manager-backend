@@ -110,7 +110,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<plugin>
+<!--			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
 				<executions>
@@ -126,6 +126,40 @@
 								<source>src/e2e/java</source>
 								<source>src/bdd/java</source>
 							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>-->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>add-test-source</id>
+						<phase>generate-test-sources</phase>
+						<goals>
+							<goal>add-test-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>src/it/java</source>
+								<source>src/e2e/java</source>
+								<source>src/bdd/java</source>
+							</sources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>add-test-resource</id>
+						<phase>generate-test-resources</phase>
+						<goals>
+							<goal>add-test-resource</goal>
+						</goals>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>src/bdd/resources</directory>
+								</resource>
+							</resources>
 						</configuration>
 					</execution>
 				</executions>
@@ -360,8 +394,30 @@
 							<execution>
 								<id>e2e-tests</id>
 								<configuration>
+									<excludes>
+										<exclude>**/*IT.java</exclude>
+										<exclude>**/*BDD.java</exclude>
+									</excludes>
 									<includes>
+										<!--<include>**/*E2E.java</include>-->
 										<include>**/*E2E.java</include>
+									</includes>
+								</configuration>
+								<goals>
+									<goal>integration-test</goal>
+									<goal>verify</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>bdd-tests</id>
+								<configuration>
+									<excludes>
+										<exclude>**/*IT.java</exclude>
+										<exclude>**/*E2E.java</exclude>
+									</excludes>
+									<includes>
+										<!--<include>**/*E2E.java</include>-->
+										<include>**/*BDD.java</include>
 									</includes>
 								</configuration>
 								<goals>
