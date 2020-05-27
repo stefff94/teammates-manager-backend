@@ -332,7 +332,7 @@
 						<executions>
 							<execution>
 								<id>docker:start</id>
-								<phase>package</phase>
+								<phase>pre-integration-test</phase>
 								<goals>
 									<goal>start</goal>
 								</goals>
