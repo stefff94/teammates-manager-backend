@@ -107,29 +107,43 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>${frabric8.docker.version}</version>
+				<configuration>
+					<showLogs>true</showLogs>
+					<images>
+						<image>
+							<alias>db</alias>
+							<external>
+								<type>compose</type>
+								<baseDir>${project.basedir}/docker</baseDir>
+								<composeFile>docker-compose.yml</composeFile>
+							</external>
+						</image>
+					</images>
+				</configuration>
+				<executions>
+					<execution>
+						<id>startDB</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>start</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>stopDB</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-<!--			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>add-test-source</id>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>add-test-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>src/it/java</source>
-								<source>src/e2e/java</source>
-								<source>src/bdd/java</source>
-							</sources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>-->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
@@ -248,7 +262,7 @@
 		<profile>
 			<id>jacoco</id>
 			<activation>
-				<activeByDefault>true</activeByDefault>
+				<activeByDefault>false</activeByDefault>
 			</activation>
 			<build>
 				<plugins>
@@ -312,41 +326,6 @@
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>io.fabric8</groupId>
-						<artifactId>docker-maven-plugin</artifactId>
-						<!--<version>0.28.0</version>-->
-						<version>${frabric8.docker.version}</version>
-						<configuration>
-							<showLogs>true</showLogs>
-							<images>
-								<image>
-									<alias>db</alias>
-									<external>
-										<type>compose</type>
-										<baseDir>${project.basedir}/docker</baseDir>
-										<composeFile>docker-compose.yml</composeFile>
-									</external>
-								</image>
-							</images>
-						</configuration>
-						<executions>
-							<execution>
-								<id>docker:start</id>
-								<phase>pre-integration-test</phase>
-								<goals>
-									<goal>start</goal>
-								</goals>
-							</execution>
-							<execution>
-								<id>docker:stop</id>
-								<phase>post-integration-test</phase>
-								<goals>
-									<goal>stop</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>build-helper-maven-plugin</artifactId>
 						<executions>
@@ -369,7 +348,7 @@
 						<artifactId>spring-boot-maven-plugin</artifactId>
 						<executions>
 							<execution>
-								<id>pre-integration-test</id>
+								<id>integration-test</id>
 								<goals>
 									<goal>start</goal>
 								</goals>

@@ -7,5 +7,6 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(features = "src/bdd/resources",
         glue = {"it.polste.attsw.teammatesmanagerbackend.steps"},
-        monochrome = true)
+        monochrome = true,
+        strict = true)
 public class HealthCheckBDD { }
