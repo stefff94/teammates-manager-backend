@@ -16,7 +16,7 @@ pipeline {
         stage('Test') {
                     steps {
                         /* sh 'mvn test' */
-                        sh 'mvn test -Pjacoco && && mvn verify && mvn verify -Pe2e-tests && mvn coveralls:report'
+                        sh 'mvn test -Pjacoco && mvn verify && mvn verify -Pe2e-tests && mvn coveralls:report'
                     }
                     post {
                         always {
