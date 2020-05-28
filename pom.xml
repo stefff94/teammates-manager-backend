@@ -348,7 +348,7 @@
 						<artifactId>spring-boot-maven-plugin</artifactId>
 						<executions>
 							<execution>
-								<id>integration-test</id>
+								<id>pre-integration-test</id>
 								<goals>
 									<goal>start</goal>
 								</goals>
