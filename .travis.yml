@@ -7,16 +7,20 @@ jdk: openjdk8
 git:
   depth: false
 
-install: true
+addons:
+  sonarcloud:
+    organization: polste
 
 services: docker
+
+install: true
 
 cache:
   directories:
     - $HOME/.m2
 
 script:
-  - ./mvnw clean verify -Pjacoco && ./mvnw coveralls:report
+  - ./mvnw clean verify -Pjacoco && ./mvnw coveralls:report sonar:sonar
 
 #deploy:
 #  api_key: 459047da-8d27-4703-b367-cdeaa1e091d3
