@@ -18,8 +18,8 @@ cache:
 script:
   - ./mvnw clean verify -Pjacoco && ./mvnw coveralls:report
 
-deploy:
-  api_key: 459047da-8d27-4703-b367-cdeaa1e091d3
-    secure: $HEROKU_API_KEY
-    app: teammates-manager-backend
-  provider: heroku
+#deploy:
+#  api_key: 459047da-8d27-4703-b367-cdeaa1e091d3
+#    secure: $HEROKU_API_KEY
+#    app: teammates-manager-backend
+#  provider: heroku
