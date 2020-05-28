@@ -14,4 +14,4 @@ cache:
     - $HOME/.m2
 
 script:
-  - ./mvnw clean test -Pjacoco && ./mvnw coveralls:report
+  - ./mvnw clean verify -Pjacoco && ./mvnw coveralls:report
