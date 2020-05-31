@@ -29,6 +29,14 @@
 		<frabric8.docker.version>0.33.0</frabric8.docker.version>
 		<pitest.version>1.4.10</pitest.version>
 		<jaxbi.version>2.3.0</jaxbi.version>
+
+		<sonar.coverage.jacoco.xmlReportPaths>
+			${project.reporting.outputDirectory}/jacoco/jacoco.xml
+		</sonar.coverage.jacoco.xmlReportPaths>
+		<sonar.junit.reportPaths>
+			${project.build.directory}/surefire-reports,
+			${project.build.directory}/failsafe-reports
+		</sonar.junit.reportPaths>
 	</properties>
 
 	<dependencies>
