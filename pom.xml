@@ -37,6 +37,16 @@
 			${project.build.directory}/surefire-reports,
 			${project.build.directory}/failsafe-reports
 		</sonar.junit.reportPaths>
+		<sonar.sources>
+			pom.xml,
+			${project.build.sourceDirectory}
+		</sonar.sources>
+		<sonar.tests>
+			${project.build.testSourceDirectory},
+			${basedir}/src/it/java,
+			${basedir}/src/e2e/java,
+			${basedir}/src/bdd/java
+		</sonar.tests>
 	</properties>
 
 	<dependencies>
