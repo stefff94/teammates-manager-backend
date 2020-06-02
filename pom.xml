@@ -27,8 +27,7 @@
 		<sonar.version>3.7.0.1746</sonar.version>
 		<mysql.version>8.0.20</mysql.version>
 		<frabric8.docker.version>0.33.0</frabric8.docker.version>
-		<pitest.version>1.4.10</pitest.version>
-		<jaxbi.version>2.3.0</jaxbi.version>
+		<pitest.version>1.5.2</pitest.version>
 
 		<sonar.coverage.jacoco.xmlReportPaths>
 			${project.reporting.outputDirectory}/jacoco/jacoco.xml
@@ -111,14 +110,15 @@
 			<version>${frabric8.docker.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
-			<version>${jaxbi.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.pitest</groupId>
+			<artifactId>pitest-parent</artifactId>
+			<version>${pitest.version}</version>
+			<type>pom</type>
 		</dependency>
 	</dependencies>
 
@@ -241,6 +241,17 @@
 					</processTypes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.pitest</groupId>
+				<artifactId>pitest-maven</artifactId>
+				<version>${pitest.version}</version>
+				<configuration>
+					<mutators>
+						<mutator>DEFAULTS</mutator>
+					</mutators>
+					<mutationThreshold>80</mutationThreshold>
+				</configuration>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -253,24 +264,6 @@
 					<groupId>org.sonarsource.scanner.maven</groupId>
 					<artifactId>sonar-maven-plugin</artifactId>
 					<version>${sonar.version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.pitest</groupId>
-					<artifactId>pitest-maven</artifactId>
-					<version>${pitest.version}</version>
-					<configuration>
-						<targetClasses>
-							<!-- excludes testing.example.bank.app.Main -->
-							<param>it.polste.attsw.teammatesmanagerbackend.*</param>
-						</targetClasses>
-						<targetTests>
-							<param>it.polste.attsw.teammatesmanagerbackend.*</param>
-						</targetTests>
-						<mutators>
-							<mutator>DEFAULTS</mutator>
-						</mutators>
-						<mutationThreshold>80</mutationThreshold>
-					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -314,6 +307,26 @@
 							<argLine>@{surefireArgLine}</argLine>
 						</configuration>
 					</plugin>
+					<plugin>
+						<groupId>org.pitest</groupId>
+						<artifactId>pitest-maven</artifactId>
+						<version>${pitest.version}</version>
+						<executions>
+							<execution>
+								<id>mutation-testing</id>
+								<phase>test</phase>
+								<goals>
+									<goal>mutationCoverage</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<mutators>
+								<mutator>DEFAULTS</mutator>
+							</mutators>
+							<mutationThreshold>80</mutationThreshold>
+						</configuration>
+					</plugin>
 				</plugins>
 				<pluginManagement>
 					<plugins>
@@ -332,144 +345,5 @@
 				</pluginManagement>
 			</build>
 		</profile>
-		<profile>
-			<id>e2e-tests</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<properties>
-				<skip.unit-tests>true</skip.unit-tests>
-				<skip.integration-tests>true</skip.integration-tests>
-			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>build-helper-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>reserve-tomcat-port</id>
-								<goals>
-									<goal>reserve-network-port</goal>
-								</goals>
-								<phase>process-resources</phase>
-								<configuration>
-									<portNames>
-										<portName>tomcat.http.port</portName>
-									</portNames>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.springframework.boot</groupId>
-						<artifactId>spring-boot-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>pre-integration-test</id>
-								<goals>
-									<goal>start</goal>
-								</goals>
-								<configuration>
-									<arguments>
-										<argument>--server.port=${tomcat.http.port}</argument>
-									</arguments>
-								</configuration>
-							</execution>
-							<execution>
-								<id>post-integration-test</id>
-								<goals>
-									<goal>stop</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-failsafe-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>e2e-tests</id>
-								<configuration>
-									<excludes>
-										<exclude>**/*IT.java</exclude>
-										<exclude>**/*BDD.java</exclude>
-									</excludes>
-									<includes>
-										<include>**/*E2E.java</include>
-									</includes>
-								</configuration>
-								<goals>
-									<goal>integration-test</goal>
-									<goal>verify</goal>
-								</goals>
-							</execution>
-							<execution>
-								<id>bdd-tests</id>
-								<configuration>
-									<excludes>
-										<exclude>**/*IT.java</exclude>
-										<exclude>**/*E2E.java</exclude>
-									</excludes>
-									<includes>
-										<include>**/*BDD.java</include>
-									</includes>
-								</configuration>
-								<goals>
-									<goal>integration-test</goal>
-									<goal>verify</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<systemPropertyVariables>
-								<server.port>${tomcat.http.port}</server.port>
-							</systemPropertyVariables>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<!--<profile>
-			<id>docker</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>io.fabric8</groupId>
-						<artifactId>docker-maven-plugin</artifactId>
-						<version>0.28.0</version>
-						<configuration>
-							<showLogs>true</showLogs>
-							<images>
-								<image>
-									<alias>db</alias>
-									<external>
-										<type>compose</type>
-										<baseDir>${project.basedir}/docker</baseDir>
-										<composeFile>docker-compose.yml</composeFile>
-									</external>
-								</image>
-							</images>
-						</configuration>
-						<executions>
-							<execution>
-								<id>docker:start</id>
-								<phase>pre-integration-test</phase>
-								<goals>
-									<goal>start</goal>
-								</goals>
-							</execution>
-							<execution>
-								<id>docker:stop</id>
-								<phase>post-integration-test</phase>
-								<goals>
-									<goal>stop</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>-->
 	</profiles>
 </project>

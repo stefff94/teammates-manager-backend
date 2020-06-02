@@ -10,9 +10,4 @@ public class TeammatesManagerBackendApplicationTest {
 
     }
 
-    @Test
-    public void mockTestForJenkinsSetup(){
-        boolean working = true;
-        assertTrue(working);
-    }
 }
