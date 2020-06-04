@@ -1,9 +1,15 @@
 package it.polste.attsw.teammatesmanagerbackend.models;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "teammates")
 public class Teammate {
 
+  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Embedded
   private PersonalData personalData;
 
   public Teammate() {}

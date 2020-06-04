@@ -1,5 +1,8 @@
 package it.polste.attsw.teammatesmanagerbackend.models;
 
+import javax.persistence.Embeddable;
+
+@Embeddable
 public class PersonalData {
 
   private String name;
