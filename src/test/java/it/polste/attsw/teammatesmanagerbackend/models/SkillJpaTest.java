@@ -1,6 +1,5 @@
-package it.polste.attsw.teammatesmanagerbackend;
+package it.polste.attsw.teammatesmanagerbackend.models;
 
-import it.polste.attsw.teammatesmanagerbackend.models.Skill;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -16,7 +15,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 public class SkillJpaTest {
 
-  private static final Logger logger = LoggerFactory.getLogger(SkillJpaTest.class);
+  private static final Logger logger =
+          LoggerFactory.getLogger(SkillJpaTest.class);
 
   @Autowired
   private TestEntityManager entityManager;
@@ -24,7 +24,8 @@ public class SkillJpaTest {
   @Test
   public void testJpaMapping() {
     Skill skill =
-            entityManager.persistFlushFind(new Skill(null, "Spring Boot"));
+            entityManager.persistFlushFind(
+                    new Skill(null, "Spring Boot"));
 
     assertThat(skill.getName()).isEqualTo("Spring Boot");
     assertThat(skill.getId()).isNotNull();

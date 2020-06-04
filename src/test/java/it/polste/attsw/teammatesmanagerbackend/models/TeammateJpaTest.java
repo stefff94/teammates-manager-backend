@@ -1,7 +1,5 @@
-package it.polste.attsw.teammatesmanagerbackend;
+package it.polste.attsw.teammatesmanagerbackend.models;
 
-import it.polste.attsw.teammatesmanagerbackend.models.PersonalData;
-import it.polste.attsw.teammatesmanagerbackend.models.Teammate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -17,7 +15,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 public class TeammateJpaTest {
 
-  private static final Logger logger = LoggerFactory.getLogger(TeammateJpaTest.class);
+  private static final Logger logger =
+          LoggerFactory.getLogger(TeammateJpaTest.class);
 
   @Autowired
   private TestEntityManager entityManager;
@@ -31,7 +30,8 @@ public class TeammateJpaTest {
             "student",
             "https://semantic-ui.com/images/avatar/large/steve.jpg");
 
-    Teammate teammate = entityManager.persistFlushFind(new Teammate(null, personalData));
+    Teammate teammate =
+            entityManager.persistFlushFind(new Teammate(null, personalData));
 
     assertThat(teammate.getPersonalData()).isEqualTo(personalData);
     assertThat(teammate.getId()).isNotNull();
