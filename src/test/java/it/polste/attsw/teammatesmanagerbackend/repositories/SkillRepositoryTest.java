@@ -24,7 +24,7 @@ public class SkillRepositoryTest {
   public void saveAndReadRecordWithRepository() {
     Skill skill = new Skill(null, "Spring Boot");
     Skill persistedSkill = skillRepository.save(skill);
-    List<Skill> skills = skill.findAll();
+    List<Skill> skills = skillRepository.findAll();
     assertThat(skills).containsExactly(persistedSkill);
   }
 
