@@ -11,6 +11,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @DataJpaTest
 @RunWith(SpringRunner.class)
 public class TeammateJpaTest {
@@ -30,6 +32,12 @@ public class TeammateJpaTest {
             "https://semantic-ui.com/images/avatar/large/steve.jpg");
 
     Teammate teammate = entityManager.persistFlushFind(new Teammate(null, personalData));
+
+    assertThat(teammate.getPersonalData()).isEqualTo(personalData);
+    assertThat(teammate.getId()).isNotNull();
+    assertThat(teammate.getId()).isGreaterThan(0);
+
+    logger.info("Persisted entity with id:" + teammate.getId());
   }
 
 }
