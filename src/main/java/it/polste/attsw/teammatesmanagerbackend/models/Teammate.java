@@ -6,6 +6,13 @@ public class Teammate {
 
   private PersonalData personalData;
 
+  public Teammate() {}
+
+  public Teammate(Long id, PersonalData personalData) {
+    this.id = id;
+    this.personalData = personalData;
+  }
+
   public Long getId() {
     return id;
   }

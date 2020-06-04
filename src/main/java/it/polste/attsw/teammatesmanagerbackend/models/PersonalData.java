@@ -14,6 +14,17 @@ public class PersonalData {
 
   private String photoUrl;
 
+  public PersonalData() {}
+
+  public PersonalData(String name, String email, String gender, String city, String role, String photoUrl) {
+    this.name = name;
+    this.email = email;
+    this.gender = gender;
+    this.city = city;
+    this.role = role;
+    this.photoUrl = photoUrl;
+  }
+
   public String getName() {
     return name;
   }
