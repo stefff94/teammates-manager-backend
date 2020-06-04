@@ -1,6 +1,7 @@
 package it.polste.attsw.teammatesmanagerbackend.repositories;
 
 import it.polste.attsw.teammatesmanagerbackend.models.Skill;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -27,9 +28,15 @@ public class SkillRepositoryTest {
   @Autowired
   private TestEntityManager testEntityManager;
 
+  private Skill skill;
+
+  @Before
+  public void setup() {
+    skill = new Skill(null, "Spring Boot");
+  }
+
   @Test
   public void saveAndReadRecordWithRepositoryTest() {
-    Skill skill = new Skill(null, "Spring Boot");
     Skill persistedSkill = skillRepository.save(skill);
     List<Skill> skills = skillRepository.findAll();
     assertThat(skills).containsExactly(persistedSkill);
@@ -40,7 +47,6 @@ public class SkillRepositoryTest {
 
   @Test
   public void saveWithTestEntityManagerAndReadWithRepositoryTest() {
-    Skill skill = new Skill(null, "Spring Boot");
     Skill persistedSkill = testEntityManager.persistFlushFind(skill);
     List<Skill> skills = skillRepository.findAll();
     assertThat(skills).containsExactly(persistedSkill);
