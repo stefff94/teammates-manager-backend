@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -23,10 +24,24 @@ public class SkillRepositoryTest {
   @Autowired
   private SkillRepository skillRepository;
 
+  @Autowired
+  private TestEntityManager testEntityManager;
+
   @Test
-  public void saveAndReadRecordWithRepository() {
+  public void saveAndReadRecordWithRepositoryTest() {
     Skill skill = new Skill(null, "Spring Boot");
     Skill persistedSkill = skillRepository.save(skill);
+    List<Skill> skills = skillRepository.findAll();
+    assertThat(skills).containsExactly(persistedSkill);
+
+    logger.info("Persisted and retrieved entity with id: "
+            + skills.get(0).getId());
+  }
+
+  @Test
+  public void saveWithTestEntityManagerAndReadWithRepositoryTest() {
+    Skill skill = new Skill(null, "Spring Boot");
+    Skill persistedSkill = testEntityManager.persistFlushFind(skill);
     List<Skill> skills = skillRepository.findAll();
     assertThat(skills).containsExactly(persistedSkill);
 
