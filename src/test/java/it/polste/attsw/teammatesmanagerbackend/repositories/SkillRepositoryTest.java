@@ -17,6 +17,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 public class SkillRepositoryTest {
 
+  private static final Logger logger =
+          LoggerFactory.getLogger(SkillRepositoryTest.class);
+
   @Autowired
   private SkillRepository skillRepository;
 
@@ -26,6 +29,9 @@ public class SkillRepositoryTest {
     Skill persistedSkill = skillRepository.save(skill);
     List<Skill> skills = skillRepository.findAll();
     assertThat(skills).containsExactly(persistedSkill);
+
+    logger.info("Persisted and retrieved entity with id: "
+            + skills.get(0).getId());
   }
 
 }
