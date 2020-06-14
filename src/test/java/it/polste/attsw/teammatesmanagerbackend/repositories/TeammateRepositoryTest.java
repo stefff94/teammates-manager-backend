@@ -2,6 +2,7 @@ package it.polste.attsw.teammatesmanagerbackend.repositories;
 
 import it.polste.attsw.teammatesmanagerbackend.models.PersonalData;
 import it.polste.attsw.teammatesmanagerbackend.models.Teammate;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -28,8 +29,10 @@ public class TeammateRepositoryTest {
   @Autowired
   private TestEntityManager testEntityManager;
 
-  @Test
-  public void saveAndReadRecordWithRepositoryTest() {
+  private Teammate teammate;
+
+  @Before
+  public void setup() {
     PersonalData personalData = new PersonalData("Stefano Vannucchi",
             "stefano.vannucchi@stud.unifi.it",
             "M",
@@ -37,7 +40,11 @@ public class TeammateRepositoryTest {
             "student",
             "https://semantic-ui.com/images/avatar/large/steve.jpg");
 
-    Teammate teammate = new Teammate(null, personalData);
+    teammate = new Teammate(null, personalData);
+  }
+
+  @Test
+  public void saveAndReadRecordWithRepositoryTest() {
     Teammate persistedTeammate = teammateRepository.save(teammate);
     List<Teammate> teammates = teammateRepository.findAll();
     assertThat(teammates).containsExactly(persistedTeammate);
@@ -48,14 +55,6 @@ public class TeammateRepositoryTest {
 
   @Test
   public void saveWithTestEntityManagerAndReadWithRepositoryTest() {
-    PersonalData personalData = new PersonalData("Stefano Vannucchi",
-            "stefano.vannucchi@stud.unifi.it",
-            "M",
-            "Prato",
-            "student",
-            "https://semantic-ui.com/images/avatar/large/steve.jpg");
-
-    Teammate teammate = new Teammate(null, personalData);
     Teammate persistedTeammate = testEntityManager.persistFlushFind(teammate);
     List<Teammate> teammates = teammateRepository.findAll();
     assertThat(teammates).containsExactly(persistedTeammate);
