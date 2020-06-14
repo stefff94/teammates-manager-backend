@@ -4,6 +4,8 @@ import it.polste.attsw.teammatesmanagerbackend.models.PersonalData;
 import it.polste.attsw.teammatesmanagerbackend.models.Teammate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -15,6 +17,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @RunWith(SpringRunner.class)
 public class TeammateRepositoryTest {
+
+  private static final Logger logger =
+          LoggerFactory.getLogger(TeammateRepositoryTest.class);
 
   @Autowired
   private TeammateRepository teammateRepository;
@@ -32,5 +37,8 @@ public class TeammateRepositoryTest {
     Teammate persistedTeammate = teammateRepository.save(teammate);
     List<Teammate> teammates = teammateRepository.findAll();
     assertThat(teammates).containsExactly(persistedTeammate);
+
+    logger.info("Persisted and retrieved entity with id: "
+            + teammates.get(0).getId());
   }
 }
