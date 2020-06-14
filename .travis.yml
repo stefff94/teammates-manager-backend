@@ -20,6 +20,7 @@ cache:
     - $HOME/.m2
 
 script:
-  - ./mvnw clean verify -Pjacoco && ./mvnw coveralls:report sonar:sonar && ./mvnw clean heroku:deploy
+#  - ./mvnw clean verify -Pjacoco && ./mvnw coveralls:report sonar:sonar && ./mvnw clean heroku:deploy
+  - ./mvnw clean verify -Pjacoco && ./mvnw coveralls:report sonar:sonar
 
 

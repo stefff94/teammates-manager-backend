@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -24,8 +25,11 @@ public class TeammateRepositoryTest {
   @Autowired
   private TeammateRepository teammateRepository;
 
+  @Autowired
+  private TestEntityManager testEntityManager;
+
   @Test
-  public void saveAndReadRecordWithRepository() {
+  public void saveAndReadRecordWithRepositoryTest() {
     PersonalData personalData = new PersonalData("Stefano Vannucchi",
             "stefano.vannucchi@stud.unifi.it",
             "M",
@@ -41,4 +45,23 @@ public class TeammateRepositoryTest {
     logger.info("Persisted and retrieved entity with id: "
             + teammates.get(0).getId());
   }
+
+  @Test
+  public void saveWithTestEntityManagerAndReadWithRepositoryTest() {
+    PersonalData personalData = new PersonalData("Stefano Vannucchi",
+            "stefano.vannucchi@stud.unifi.it",
+            "M",
+            "Prato",
+            "student",
+            "https://semantic-ui.com/images/avatar/large/steve.jpg");
+
+    Teammate teammate = new Teammate(null, personalData);
+    Teammate persistedTeammate = testEntityManager.persistFlushFind(teammate);
+    List<Teammate> teammates = teammateRepository.findAll();
+    assertThat(teammates).containsExactly(persistedTeammate);
+
+    logger.info("Persisted and retrieved entity with id: "
+            + teammates.get(0).getId());
+  }
+
 }
