@@ -1,4 +1,4 @@
-package it.polste.attsw.teammatesmanagerbackend;
+package it.polste.attsw.teammatesmanagerbackend.controllers;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(controllers = SkillRestController)
+@WebMvcTest(controllers = SkillRestController.class)
 public class SkillRestControllerTest {
 
   @Autowired
