@@ -43,6 +43,10 @@
 			${project.build.testSourceDirectory},
 			${basedir}/src/it/java
 		</sonar.tests>
+		<sonar.coverage.exclusions>
+			**/Application.*,
+			**/models/*
+		</sonar.coverage.exclusions>
 	</properties>
 
 	<dependencies>
@@ -268,6 +272,7 @@
 							</execution>
 						</executions>
 						<configuration>
+							<skip>true</skip>
 							<targetClasses>
 <!--								<param>it.polste.attsw.teammatesmanagerbackend.services.*</param>-->
 <!--								<param>it.polste.attsw.teammatesmanagerbackend.repositories.*</param>-->
