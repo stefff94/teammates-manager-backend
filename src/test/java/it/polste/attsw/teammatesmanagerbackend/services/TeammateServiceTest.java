@@ -11,6 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.mockito.Mockito.*;
+
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -56,12 +58,17 @@ public class TeammateServiceTest {
     @Test
     public void insertNewTeammateReturnsSavedTeammateWithIdTest(){
         Teammate saved = new Teammate(1L, personalData1);
+        Teammate toSave = spy(new Teammate(999L, personalData2));
 
         when(teammateRepository.save(any(Teammate.class)))
                 .thenReturn(saved);
-        Teammate result = teammateService.insertNewTeammate(saved);
+        Teammate result = teammateService.insertNewTeammate(toSave);
 
         assertThat(result).isSameAs(saved);
         logger.info("Inserted new teammate with id: " + saved.getId());
+
+        InOrder inOrder = inOrder(toSave, teammateRepository);
+        inOrder.verify(toSave).setId(null);
+        inOrder.verify(teammateRepository).save(toSave);
     }
 }
