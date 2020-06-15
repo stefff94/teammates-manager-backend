@@ -34,7 +34,8 @@ public class TeammateService {
     }
 
     public Teammate updateTeammate(Long id, Teammate teammate){
-
+        teammate.setId(id);
+        return teammateRepository.save(teammate);
     }
 
     public void deleteTeammate(Long id){
