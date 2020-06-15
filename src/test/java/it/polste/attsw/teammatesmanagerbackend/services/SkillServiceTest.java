@@ -10,6 +10,8 @@ import static java.util.Arrays.asList;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.mockito.Mockito.*;
+
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -54,5 +56,9 @@ public class SkillServiceTest {
 
         assertThat(result).isSameAs(saved);
         logger.info("Inserted new skill with name: " + saved.getName());
+
+        InOrder inOrder = inOrder(toSave, skillRepository);
+        inOrder.verify(toSave).setId(null);
+        inOrder.verify(skillRepository).save(toSave);
     }
 }
