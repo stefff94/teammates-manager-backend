@@ -68,7 +68,6 @@ public class TeammateServiceTest {
 
     @Test
     public void insertNewTeammateReturnsSavedTeammateWithIdTest(){
-
         Teammate saved = new Teammate(1L, personalData1, skills1);
         Teammate toSave = spy(new Teammate(999L, personalData2, skills2));
 
@@ -109,7 +108,6 @@ public class TeammateServiceTest {
 
     @Test
     public void deleteTeammateTest(){
-
         Teammate teammate = new Teammate(1L, personalData1, skills1);
 
         when(teammateRepository.findById(1L)).thenReturn(Optional.of(teammate));

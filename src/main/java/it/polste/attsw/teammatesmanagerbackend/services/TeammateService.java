@@ -34,5 +34,7 @@ public class TeammateService {
     }
 
     public void deleteTeammate(Long id){
+        teammateRepository.findById(id)
+                .ifPresent(teammate -> teammateRepository.deleteById(id));
     }
 }
