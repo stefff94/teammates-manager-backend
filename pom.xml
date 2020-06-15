@@ -45,7 +45,8 @@
 		</sonar.tests>
 		<sonar.coverage.exclusions>
 			**/*Application.*,
-			**/models/*
+			**/models/*,
+			**/repositories/*
 		</sonar.coverage.exclusions>
 	</properties>
 
@@ -238,7 +239,6 @@
 								<exclude>**/*Application.*</exclude>
 								<exclude>**/models/*</exclude>
 								<exclude>it.polste.attsw.teammatesmanagerbackend.models.*</exclude>
-								<exclude>it.polste.attsw.teammatesmanagerbackend.repositories.*</exclude>
 							</excludes>
 						</configuration>
 						<executions>
