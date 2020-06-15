@@ -34,7 +34,7 @@ public class TeammateServiceTest {
     private TeammateRepository teammateRepository;
 
     @Mock
-    private SkillRepository skillRepository;
+    private SkillService skillService;
 
     @InjectMocks
     private TeammateService teammateService;
@@ -69,31 +69,42 @@ public class TeammateServiceTest {
 
     @Test
     public void insertNewTeammateReturnsSavedTeammateWithIdTest(){
-        Skill savedSkill = new Skill(1L, "skill");
-        Set<Skill> savedSkills = new HashSet<>();
-        savedSkills.add(savedSkill);
-        Teammate saved = new Teammate(1L, personalData1, savedSkills);
 
-        Skill toSaveSkill = new Skill(999L, "skill");
-        toSaveSkill.setId(null);
-        Set<Skill> toSaveSkills = new HashSet<>();
-        toSaveSkills.add(toSaveSkill);
-        Teammate toSave = spy(new Teammate(999L, personalData2, toSaveSkills));
+        Teammate saved = new Teammate(1L, personalData1, skills1);
+        Teammate toSave = spy(new Teammate(999L, personalData2, skills2));
 
-        when(skillRepository.save(any(Skill.class)))
-                .thenReturn(savedSkill);
         when(teammateRepository.save(any(Teammate.class)))
                 .thenReturn(saved);
         Teammate result = teammateService.insertNewTeammate(toSave);
 
         assertThat(result).isSameAs(saved);
-        assertThat(result.getSkills())
-                .containsExactly(savedSkill);
         logger.info("Inserted new teammate with id: " + saved.getId());
 
-        InOrder inOrder = inOrder(toSave, skillRepository, teammateRepository);
+        InOrder inOrder = inOrder(toSave, teammateRepository);
         inOrder.verify(toSave).setId(null);
-        inOrder.verify(skillRepository).save(toSaveSkill);
+        inOrder.verify(teammateRepository).save(toSave);
+    }
+
+    @Test
+    public void insertNewTeammateSavesReturnsSavedTeammateWithSavedSkillTest(){
+        Skill savedSkill = new Skill(1L, "skill");
+        Skill toSaveSkill = new Skill(999L, "skill");
+        toSaveSkill.setId(null);
+        Set<Skill> toSaveSkills = new HashSet<>();
+        toSaveSkills.add(toSaveSkill);
+        Teammate toSave = new Teammate(1L, personalData1, toSaveSkills);
+
+        when(skillService.insertNewSkill(any(Skill.class)))
+                .thenReturn(savedSkill);
+        when(teammateRepository.save(any(Teammate.class)))
+                .thenReturn(toSave);
+        Teammate result = teammateService.insertNewTeammate(toSave);
+
+        assertThat(result.getSkills())
+                .containsExactly(savedSkill);
+        logger.info("Inserted new skill with name: " + savedSkill.getName());
+        InOrder inOrder = inOrder(skillService, teammateRepository);
+        inOrder.verify(skillService).insertNewSkill(toSaveSkill);
         inOrder.verify(teammateRepository).save(toSave);
     }
 
