@@ -8,6 +8,11 @@ public class Skill {
 
   public Skill() {}
 
+  public Skill(long id, String skillName) {
+    this.id = id;
+    this.name = skillName;
+  }
+
   public Long getId() {
     return id;
   }
