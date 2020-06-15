@@ -22,6 +22,7 @@ public class TeammateService {
     }
 
     public Teammate insertNewTeammate(Teammate teammate){
-        return new Teammate(0L, teammate.getPersonalData());
+        teammate.setId(null);
+        return teammateRepository.save(teammate);
     }
 }
