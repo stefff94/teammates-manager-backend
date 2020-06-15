@@ -280,7 +280,7 @@
 								<!--								<param>it.polste.attsw.teammatesmanagerbackend.controllers.*</param>-->
 							</targetClasses>
 							<targetTests>
-								<param>**/*Test.java</param>
+								<param>it.polste.attsw.teammatesmanagerbackend.services.SkillServiceTest</param>
 							</targetTests>
 							<mutators>
 								<mutator>DEFAULTS</mutator>
