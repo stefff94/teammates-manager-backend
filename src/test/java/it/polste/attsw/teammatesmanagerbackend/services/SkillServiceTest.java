@@ -61,4 +61,17 @@ public class SkillServiceTest {
         inOrder.verify(toSave).setId(null);
         inOrder.verify(skillRepository).save(toSave);
     }
+
+    @Test
+    public void insertExistingSkillAndReturnPreviouslySavedSkillTest(){
+        Skill toSave = new Skill(999L, "Skill");
+        Skill saved = new Skill(1L, "skill");
+
+        when(skillRepository.findAll())
+                .thenReturn(Collections.singletonList(saved));
+
+        Skill result = skillService.insertNewSkill(toSave);
+        assertThat(result).isSameAs(saved);
+        logger.info("Returned existing skill: " + saved.getName());
+    }
 }
