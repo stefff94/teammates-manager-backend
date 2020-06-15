@@ -69,6 +69,8 @@ public class TeammateServiceTest {
     @Test
     public void insertNewTeammateReturnsSavedTeammateWithIdTest(){
         Teammate saved = new Teammate(1L, personalData1, skills1);
+        Skill skillToSave = new Skill(999L, "skill");
+        skills2.add(skillToSave);
         Teammate toSave = spy(new Teammate(999L, personalData2, skills2));
 
         when(teammateRepository.save(any(Teammate.class)))
@@ -76,33 +78,12 @@ public class TeammateServiceTest {
         Teammate result = teammateService.insertNewTeammate(toSave);
 
         assertThat(result).isSameAs(saved);
+        verify(skillService, times(1)).insertNewSkill(skillToSave);
         logger.info("Inserted new teammate with id: " + saved.getId());
 
-        InOrder inOrder = inOrder(toSave, teammateRepository);
+        InOrder inOrder = inOrder(toSave, skillService, teammateRepository);
         inOrder.verify(toSave).setId(null);
-        inOrder.verify(teammateRepository).save(toSave);
-    }
-
-    @Test
-    public void insertNewTeammateReturnsSavedTeammateWithSavedSkillTest(){
-        Skill savedSkill = new Skill(1L, "skill");
-        Skill toSaveSkill = new Skill(999L, "skill");
-        toSaveSkill.setId(null);
-        Set<Skill> toSaveSkills = new HashSet<>();
-        toSaveSkills.add(toSaveSkill);
-        Teammate toSave = new Teammate(1L, personalData1, toSaveSkills);
-
-        when(skillService.insertNewSkill(any(Skill.class)))
-                .thenReturn(savedSkill);
-        when(teammateRepository.save(any(Teammate.class)))
-                .thenReturn(toSave);
-        Teammate result = teammateService.insertNewTeammate(toSave);
-
-        assertThat(result.getSkills())
-                .containsExactly(savedSkill);
-        logger.info("Inserted new skill with name: " + savedSkill.getName());
-        InOrder inOrder = inOrder(skillService, teammateRepository);
-        inOrder.verify(skillService).insertNewSkill(toSaveSkill);
+        inOrder.verify(skillService).insertNewSkill(skillToSave);
         inOrder.verify(teammateRepository).save(toSave);
     }
 
@@ -131,6 +112,5 @@ public class TeammateServiceTest {
         InOrder inOrder = inOrder(replacement, teammateRepository);
         inOrder.verify(replacement).setId(1L);
         inOrder.verify(teammateRepository).save(replacement);
-
     }
 }
