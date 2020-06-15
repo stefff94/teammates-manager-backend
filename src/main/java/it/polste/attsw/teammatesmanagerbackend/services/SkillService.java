@@ -20,4 +20,8 @@ public class SkillService {
     public List<Skill> getAllSkills(){
         return skillRepository.findAll();
     }
+
+    public Skill insertNewSkill(Skill newSkill){
+        return new Skill();
+    }
 }
