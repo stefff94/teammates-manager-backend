@@ -10,7 +10,7 @@ public class TeammateRepository {
 
     private static final String TEMPORARY_IMPLEMENTATION = "Temporary Implementation";
 
-    public List<Teammate> findAll(){
-        throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION);
-    }
+    public List<Teammate> findAll(){ throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION); }
+
+    public Teammate save(Teammate teammate){ throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION); }
 }

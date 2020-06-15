@@ -1,5 +1,6 @@
 package it.polste.attsw.teammatesmanagerbackend.services;
 
+import it.polste.attsw.teammatesmanagerbackend.models.PersonalData;
 import it.polste.attsw.teammatesmanagerbackend.models.Teammate;
 import it.polste.attsw.teammatesmanagerbackend.repositories.TeammateRepository;
 import org.springframework.stereotype.Service;
@@ -18,5 +19,9 @@ public class TeammateService {
 
     public List<Teammate> getAllTeammates(){
         return teammateRepository.findAll();
+    }
+
+    public Teammate insertNewTeammate(Teammate teammate){
+        return new Teammate(0L, teammate.getPersonalData());
     }
 }

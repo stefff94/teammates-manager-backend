@@ -51,6 +51,17 @@ public class TeammateServiceTest {
         List<Teammate> result = teammateService.getAllTeammates();
 
         assertThat(result).containsExactly(teammate1, teammate2);
+    }
 
+    @Test
+    public void insertNewTeammateReturnsSavedTeammateWithIdTest(){
+        Teammate saved = new Teammate(1L, personalData1);
+
+        when(teammateRepository.save(any(Teammate.class)))
+                .thenReturn(saved);
+        Teammate result = teammateService.insertNewTeammate(saved);
+
+        assertThat(result).isSameAs(saved);
+        logger.info("Inserted new teammate with id: " + saved.getId());
     }
 }
