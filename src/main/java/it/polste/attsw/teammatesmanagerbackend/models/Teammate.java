@@ -2,23 +2,28 @@ package it.polste.attsw.teammatesmanagerbackend.models;
 
 public class Teammate {
 
-  private Long id;
+    private Long id;
 
-  private PersonalData personalData;
+    private PersonalData personalData;
 
-  public Long getId() {
-    return id;
-  }
+    public Teammate(Long id, PersonalData personalData){
+        this.id = id;
+        this.personalData = personalData;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public Long getId() {
+        return id;
+    }
 
-  public PersonalData getPersonalData() {
-    return personalData;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public void setPersonalData(PersonalData personalData) {
-    this.personalData = personalData;
-  }
+    public PersonalData getPersonalData() {
+        return personalData;
+    }
+
+    public void setPersonalData(PersonalData personalData) {
+        this.personalData = personalData;
+    }
 }
