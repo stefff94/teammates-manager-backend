@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.1.14.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/>
 	</parent>
 	<groupId>it.polste.attsw</groupId>
 	<artifactId>teammates-manager-backend</artifactId>
@@ -20,7 +20,6 @@
 		<skip.unit-tests>false</skip.unit-tests>
 		<skip.integration-tests>false</skip.integration-tests>
 
-		<cucumber.version>5.5.0</cucumber.version>
 		<jacoco.version>0.8.5</jacoco.version>
 		<heroku.version>3.0.2</heroku.version>
 		<coveralls.version>4.3.0</coveralls.version>
@@ -42,10 +41,12 @@
 		</sonar.sources>
 		<sonar.tests>
 			${project.build.testSourceDirectory},
-			${basedir}/src/it/java,
-			${basedir}/src/e2e/java,
-			${basedir}/src/bdd/java
+			${basedir}/src/it/java
 		</sonar.tests>
+		<sonar.coverage.exclusions>
+			**/*Application.*,
+			**/models/*
+		</sonar.coverage.exclusions>
 	</properties>
 
 	<dependencies>
@@ -73,30 +74,8 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.rest-assured</groupId>
-			<artifactId>spring-mock-mvc</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.cucumber</groupId>
-			<artifactId>cucumber-java</artifactId>
-			<version>${cucumber.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.cucumber</groupId>
-			<artifactId>cucumber-junit</artifactId>
-			<version>${cucumber.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -175,23 +154,7 @@
 						<configuration>
 							<sources>
 								<source>src/it/java</source>
-								<source>src/e2e/java</source>
-								<source>src/bdd/java</source>
 							</sources>
-						</configuration>
-					</execution>
-					<execution>
-						<id>add-test-resource</id>
-						<phase>generate-test-resources</phase>
-						<goals>
-							<goal>add-test-resource</goal>
-						</goals>
-						<configuration>
-							<resources>
-								<resource>
-									<directory>src/bdd/resources</directory>
-								</resource>
-							</resources>
 						</configuration>
 					</execution>
 				</executions>
@@ -274,6 +237,7 @@
 							<excludes>
 								<exclude>**/*Application.*</exclude>
 								<exclude>**/models/*</exclude>
+								<exclude>it.polste.attsw.teammatesmanagerbackend.models.*</exclude>
 							</excludes>
 						</configuration>
 						<executions>
@@ -292,7 +256,6 @@
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
-							<!-- Code coverage for surefire tests -->
 							<argLine>@{surefireArgLine}</argLine>
 						</configuration>
 					</plugin>
@@ -310,16 +273,25 @@
 							</execution>
 						</executions>
 						<configuration>
+							<skip>false</skip>
+							<targetClasses>
+<!--								<param>it.polste.attsw.teammatesmanagerbackend.services.*</param>-->
+								<!--								<param>it.polste.attsw.teammatesmanagerbackend.repositories.*</param>-->
+								<!--								<param>it.polste.attsw.teammatesmanagerbackend.controllers.*</param>-->
+							</targetClasses>
+							<targetTests>
+								<param>**/*Test.java</param>
+							</targetTests>
 							<mutators>
 								<mutator>DEFAULTS</mutator>
+								<mutator>NON_VOID_METHOD_CALLS</mutator>
 							</mutators>
-							<mutationThreshold>0</mutationThreshold><!--TODO: set to 80-->
+							<mutationThreshold>80</mutationThreshold>
 						</configuration>
 					</plugin>
 				</plugins>
 				<pluginManagement>
 					<plugins>
-						<!-- You must run coveralls:report explicitly -->
 						<plugin>
 							<groupId>org.eluder.coveralls</groupId>
 							<artifactId>coveralls-maven-plugin</artifactId>

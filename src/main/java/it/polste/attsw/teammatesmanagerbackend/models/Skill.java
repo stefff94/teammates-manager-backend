@@ -6,6 +6,8 @@ public class Skill {
 
   private String name;
 
+  public Skill() {}
+
   public Long getId() {
     return id;
   }
