@@ -116,4 +116,21 @@ public class TeammateServiceTest {
         verify(teammateRepository, times(1)).deleteById(any());
     }
 
+    @Test
+    public void updateTeammateByIdReturnsUpdatedTeammateWithPreviousIdTest(){
+        Teammate replacement = spy(new Teammate(null, personalData1, skills1));
+        Teammate replaced = new Teammate(1L, personalData1, skills1);
+
+        when(teammateRepository.save(any(Teammate.class)))
+                .thenReturn(replaced);
+
+        Teammate result = teammateService.updateTeammate(1L, replacement);
+
+        assertThat(result).isSameAs(replaced);
+
+        InOrder inOrder = inOrder(replacement, teammateRepository);
+        inOrder.verify(replacement).setId(1L);
+        inOrder.verify(teammateRepository).save(replacement);
+
+    }
 }

@@ -33,6 +33,10 @@ public class TeammateService {
         return teammateRepository.save(teammate);
     }
 
+    public Teammate updateTeammate(Long id, Teammate teammate){
+
+    }
+
     public void deleteTeammate(Long id){
         teammateRepository.findById(id)
                 .ifPresent(teammate -> teammateRepository.deleteById(id));
