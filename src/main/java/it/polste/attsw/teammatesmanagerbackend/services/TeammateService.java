@@ -17,7 +17,6 @@ public class TeammateService {
     }
 
     public List<Teammate> getAllTeammates(){
-        List<Teammate> result = new ArrayList<>();
-        return result;
+        return teammateRepository.findAll();
     }
 }
