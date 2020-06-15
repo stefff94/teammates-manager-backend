@@ -11,9 +11,11 @@ import java.util.*;
 public class TeammateService {
 
     private final TeammateRepository teammateRepository;
+    private final SkillService skillService;
 
-    public TeammateService(TeammateRepository teammateRepository){
+    public TeammateService(TeammateRepository teammateRepository, SkillService skillService){
         this.teammateRepository = teammateRepository;
+        this.skillService = skillService;
     }
 
     public List<Teammate> getAllTeammates(){
@@ -22,6 +24,12 @@ public class TeammateService {
 
     public Teammate insertNewTeammate(Teammate teammate){
         teammate.setId(null);
+
+        Set<Skill> teammateSkills = new HashSet<>();
+        teammate.getSkills().forEach(skill ->
+                teammateSkills.add(skillService.insertNewSkill(skill)));
+        teammate.setSkills(teammateSkills);
+
         return teammateRepository.save(teammate);
     }
 }
