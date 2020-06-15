@@ -239,6 +239,7 @@
 								<exclude>**/*Application.*</exclude>
 								<exclude>**/models/*</exclude>
 								<exclude>it.polste.attsw.teammatesmanagerbackend.models.*</exclude>
+								<exclude>it.polste.attsw.teammatesmanagerbackend.repositories.*</exclude>
 							</excludes>
 						</configuration>
 						<executions>

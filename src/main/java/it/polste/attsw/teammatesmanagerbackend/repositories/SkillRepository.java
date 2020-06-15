@@ -19,6 +19,8 @@ public class SkillRepository {
         throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION);
     }
 
+    public Boolean existsById(Long id){ throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION); }
+
     public Skill save(Skill skill){
         throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION);
     }
