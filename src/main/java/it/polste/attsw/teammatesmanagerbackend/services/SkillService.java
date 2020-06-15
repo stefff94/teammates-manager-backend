@@ -4,6 +4,7 @@ import it.polste.attsw.teammatesmanagerbackend.models.Skill;
 import it.polste.attsw.teammatesmanagerbackend.repositories.SkillRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,13 @@ public class SkillService {
     }
 
     public Skill insertNewSkill(Skill skill){
-        skill.setId(null);
-        return skillRepository.save(skill);
+        List<Skill> skills = skillRepository.findAll();
+        Optional<Skill> savedSkill = skills.stream().filter(s -> s.getName().toLowerCase().equals(skill.getName().toLowerCase())).findFirst();
+        if(savedSkill.isPresent()){
+            return savedSkill.get();
+        }else{
+            skill.setId(null);
+            return skillRepository.save(skill);
+        }
     }
 }

@@ -48,7 +48,7 @@ public class SkillServiceTest {
     @Test
     public void insertNewSkillAndReturnSavedSkillWithIdTest(){
         Skill saved = new Skill(1L, "skill");
-        Skill toSave = new Skill(999L, "skill");
+        Skill toSave = spy(new Skill(999L, ""));
 
         when(skillRepository.save(any(Skill.class)))
                 .thenReturn(saved);
@@ -74,4 +74,6 @@ public class SkillServiceTest {
         assertThat(result).isSameAs(saved);
         logger.info("Returned existing skill: " + saved.getName());
     }
+
+
 }
