@@ -21,7 +21,8 @@ public class SkillService {
         return skillRepository.findAll();
     }
 
-    public Skill insertNewSkill(Skill newSkill){
-        return new Skill();
+    public Skill insertNewSkill(Skill skill){
+        skill.setId(null);
+        return skillRepository.save(skill);
     }
 }

@@ -48,8 +48,8 @@ public class SkillServiceTest {
         Skill saved = new Skill(1L, "skill");
         Skill toSave = new Skill(999L, "skill");
 
-        when(skillRepository.findAll())
-                .thenReturn(Collections.singletonList(saved));
+        when(skillRepository.save(any(Skill.class)))
+                .thenReturn(saved);
         Skill result = skillService.insertNewSkill(toSave);
 
         assertThat(result).isSameAs(saved);
