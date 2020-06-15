@@ -41,6 +41,18 @@ public class SkillServiceTest {
         assertThat(result).containsExactly(skill1, skill2);
 
         logger.info("Retrieved all skills: " + result.size() + " skills");
+    }
 
+    @Test
+    public void insertNewSkillAndReturnSavedSkillWithIdTest(){
+        Skill saved = new Skill(1L, "skill");
+        Skill toSave = new Skill(999L, "skill");
+
+        when(skillRepository.findAll())
+                .thenReturn(Collections.singletonList(saved));
+        Skill result = skillService.insertNewSkill(toSave);
+
+        assertThat(result).isSameAs(saved);
+        logger.info("Inserted new skill with name: " + saved.getName());
     }
 }
