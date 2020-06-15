@@ -3,11 +3,11 @@ package it.polste.attsw.teammatesmanagerbackend.services;
 import it.polste.attsw.teammatesmanagerbackend.models.PersonalData;
 import it.polste.attsw.teammatesmanagerbackend.models.Skill;
 import it.polste.attsw.teammatesmanagerbackend.models.Teammate;
-import it.polste.attsw.teammatesmanagerbackend.repositories.SkillRepository;
 import it.polste.attsw.teammatesmanagerbackend.repositories.TeammateRepository;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import static java.util.Arrays.asList;
 
@@ -15,7 +15,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.mockito.Mockito.*;
-
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -86,7 +85,7 @@ public class TeammateServiceTest {
     }
 
     @Test
-    public void insertNewTeammateSavesReturnsSavedTeammateWithSavedSkillTest(){
+    public void insertNewTeammateReturnsSavedTeammateWithSavedSkillTest(){
         Skill savedSkill = new Skill(1L, "skill");
         Skill toSaveSkill = new Skill(999L, "skill");
         toSaveSkill.setId(null);
@@ -106,6 +105,17 @@ public class TeammateServiceTest {
         InOrder inOrder = inOrder(skillService, teammateRepository);
         inOrder.verify(skillService).insertNewSkill(toSaveSkill);
         inOrder.verify(teammateRepository).save(toSave);
+    }
+
+    @Test
+    public void deleteTeammateTest(){
+
+        Teammate teammate = new Teammate(1L, personalData1, skills1);
+
+        when(teammateRepository.findById(1L)).thenReturn(Optional.of(teammate));
+        teammateService.deleteTeammate(1L);
+
+        verify(teammateRepository, times(1)).deleteById(any());
     }
 
 }

@@ -32,4 +32,7 @@ public class TeammateService {
 
         return teammateRepository.save(teammate);
     }
+
+    public void deleteTeammate(Long id){
+    }
 }
