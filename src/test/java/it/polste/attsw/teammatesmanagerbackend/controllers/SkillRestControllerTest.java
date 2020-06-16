@@ -1,56 +1,63 @@
 package it.polste.attsw.teammatesmanagerbackend.controllers;
 
+import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import it.polste.attsw.teammatesmanagerbackend.models.Skill;
 import it.polste.attsw.teammatesmanagerbackend.services.SkillService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static io.restassured.module.mockmvc.RestAssuredMockMvc.when;
+import static org.hamcrest.Matchers.empty;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest(controllers = SkillRestController.class)
+@RunWith(MockitoJUnitRunner.class)
 public class SkillRestControllerTest {
 
-  @Autowired
-  private MockMvc mockMvc;
-
-  @MockBean
+  @Mock
   private SkillService skillService;
 
-  @Test
-  public void testGetAllSkillsWhenEmpty() throws Exception {
-    this.mockMvc.perform(get("/api/skills")
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().json("[]"));
+  @InjectMocks
+  private SkillRestController skillRestController;
+
+  @Before
+  public void setup() {
+    RestAssuredMockMvc.standaloneSetup(skillRestController);
   }
 
   @Test
-  public void testGetAllSkillsWhenNotEmpty() throws Exception {
+  public void testGetAllSkillsWhenEmpty() {
+    when().
+            get("/api/skills").
+    then().
+            statusCode(200).
+            assertThat().
+            body("", empty());
+  }
+
+  @Test
+  public void testGetAllSkillsWhenNotEmpty() {
     when(skillService.getAllSkills())
             .thenReturn(Arrays.asList(
                     new Skill(1L, "Spring Boot"),
                     new Skill(2L, "Vue js")
             ));
 
-    this.mockMvc.perform(get("/api/skills")
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].id", is(1)))
-            .andExpect(jsonPath("$[0].name", is("Spring Boot")))
-            .andExpect(jsonPath("$[1].id", is(2)))
-            .andExpect(jsonPath("$[1].name", is("Vue js")));
+    when().
+            get("/api/skills").
+    then().
+            statusCode(200).
+            assertThat().
+            body(
+                    "id", hasItems(1, 2),
+                    "name", hasItems("Spring Boot", "Vue js")
+            );
   }
 
 }
