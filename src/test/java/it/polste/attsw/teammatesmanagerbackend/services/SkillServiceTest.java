@@ -3,7 +3,6 @@ package it.polste.attsw.teammatesmanagerbackend.services;
 import it.polste.attsw.teammatesmanagerbackend.repositories.SkillRepository;
 import it.polste.attsw.teammatesmanagerbackend.models.Skill;
 
-import java.util.Collections;
 import java.util.List;
 import static java.util.Arrays.asList;
 
@@ -63,15 +62,16 @@ public class SkillServiceTest {
 
     @Test
     public void insertExistingSkillAndReturnPreviouslySavedSkillTest(){
-        Skill toSave = new Skill(999L, "Skill");
-        Skill saved = new Skill(1L, "skill");
+        Skill toSave = new Skill(999L, "Skill1");
+        Skill saved1 = new Skill(1L, "skill1");
+        Skill saved2 = new Skill(2L, "skill2");
 
         when(skillRepository.findAll())
-                .thenReturn(Collections.singletonList(saved));
+                .thenReturn(asList(saved2, saved1));
 
         Skill result = skillService.insertNewSkill(toSave);
-        assertThat(result).isSameAs(saved);
-        logger.info("Returned existing skill: " + saved.getName());
+        assertThat(result).isSameAs(saved1);
+        logger.info("Returned existing skill: " + saved1.getName());
     }
 
 
