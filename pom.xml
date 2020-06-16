@@ -45,7 +45,8 @@
 		</sonar.tests>
 		<sonar.coverage.exclusions>
 			**/Application.*,
-			**/models/*
+			**/models/*,
+			**/services/*
 		</sonar.coverage.exclusions>
 	</properties>
 
@@ -237,6 +238,7 @@
 							<excludes>
 								<exclude>**/*Application.*</exclude>
 								<exclude>**/models/*</exclude>
+								<exclude>**/services/*</exclude>
 							</excludes>
 						</configuration>
 						<executions>
@@ -272,14 +274,12 @@
 							</execution>
 						</executions>
 						<configuration>
-							<skip>true</skip>
+							<!--<skip>true</skip>-->
 							<targetClasses>
-<!--								<param>it.polste.attsw.teammatesmanagerbackend.services.*</param>-->
-<!--								<param>it.polste.attsw.teammatesmanagerbackend.repositories.*</param>-->
-<!--								<param>it.polste.attsw.teammatesmanagerbackend.controllers.*</param>-->
+								<param>it.polste.attsw.teammatesmanagerbackend.controllers.*</param>
 							</targetClasses>
 							<targetTests>
-								<param>**/*Test.java</param>
+								<param>it.polste.attsw.teammatesmanagerbackend.controllers.*Test</param>
 							</targetTests>
 							<mutators>
 								<mutator>DEFAULTS</mutator>

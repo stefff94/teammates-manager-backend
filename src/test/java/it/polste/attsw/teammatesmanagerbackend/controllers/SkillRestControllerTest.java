@@ -36,6 +36,7 @@ public class SkillRestControllerTest {
             .andExpect(content().json("[]"));
   }
 
+  @Test
   public void testGetAllSkillsWhenNotEmpty() throws Exception {
     when(skillService.getAllSkills())
             .thenReturn(Arrays.asList(
