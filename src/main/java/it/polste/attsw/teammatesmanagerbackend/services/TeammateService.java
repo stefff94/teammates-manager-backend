@@ -25,21 +25,24 @@ public class TeammateService {
     public Teammate insertNewTeammate(Teammate teammate){
         teammate.setId(null);
 
-        Set<Skill> teammateSkills = new HashSet<>();
-        teammate.getSkills().forEach(skill ->
-                teammateSkills.add(skillService.insertNewSkill(skill)));
-        teammate.setSkills(teammateSkills);
+        Set<Skill> savedSkills = saveSkillsForTeammate(teammate.getSkills());
+        teammate.setSkills(savedSkills);
 
         return teammateRepository.save(teammate);
+    }
+
+    private Set<Skill> saveSkillsForTeammate(Set<Skill> skills){
+        Set<Skill> teammateSkills = new HashSet<>();
+        skills.forEach(skill ->
+                teammateSkills.add(skillService.insertNewSkill(skill)));
+        return teammateSkills;
     }
 
     public Teammate updateTeammate(Long id, Teammate teammate){
         teammate.setId(id);
 
-        Set<Skill> teammateSkills = new HashSet<>();
-        teammate.getSkills().forEach(skill ->
-                teammateSkills.add(skillService.insertNewSkill(skill)));
-        teammate.setSkills(teammateSkills);
+        Set<Skill> savedSkills = saveSkillsForTeammate(teammate.getSkills());
+        teammate.setSkills(savedSkills);
 
         return teammateRepository.save(teammate);
     }
