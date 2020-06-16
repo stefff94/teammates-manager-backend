@@ -42,6 +42,8 @@ public class TeammateServiceTest {
     private PersonalData personalData2;
     private Set<Skill> skills1;
     private Set<Skill> skills2;
+    private Skill savedSkill;
+    private Skill skillToSave;
 
     @Before
     public void setup(){
@@ -51,7 +53,12 @@ public class TeammateServiceTest {
                 "role2", "photoUrl2");
 
         skills1 = new HashSet<>();
+        savedSkill = new Skill(1L, "skill");
+        skills1.add(savedSkill);
+
         skills2 = new HashSet<>();
+        skillToSave = new Skill(999L, "skill");
+        skills2.add(skillToSave);
     }
 
     @Test
@@ -70,19 +77,19 @@ public class TeammateServiceTest {
     @Test
     public void insertNewTeammateReturnsSavedTeammateWithIdTest(){
         Teammate saved = new Teammate(1L, personalData1, skills1);
-        Skill skillToSave = new Skill(1L, "skill");
-        skills2.add(skillToSave);
         Teammate toSave = spy(new Teammate(999L, personalData2, skills2));
 
+        when(skillService.insertNewSkill(any(Skill.class)))
+                .thenReturn(savedSkill);
         when(teammateRepository.save(any(Teammate.class)))
                 .thenReturn(saved);
-        when(skillService.insertNewSkill(any(Skill.class)))
-                .thenReturn(skillToSave);
+
         Teammate result = teammateService.insertNewTeammate(toSave);
 
-        verify(skillService, times(1)).insertNewSkill(skillToSave);
-        verify(toSave).setSkills(skills2);
         assertThat(result).isSameAs(saved);
+        assertThat(toSave.getSkills()).isEqualTo(skills1);
+        verify(skillService, times(1)).insertNewSkill(skillToSave);
+
         logger.info("Inserted new teammate with id: " + saved.getId());
 
         InOrder inOrder = inOrder(toSave, skillService, teammateRepository);
@@ -104,21 +111,19 @@ public class TeammateServiceTest {
 
     @Test
     public void updateTeammateByIdReturnsUpdatedTeammateWithPreviousIdTest(){
-        Skill skillToSave = new Skill(1L, "skill");
-        skills1.add(skillToSave);
-        Teammate replacement = spy(new Teammate(null, personalData1, skills1));
+        Teammate replacement = spy(new Teammate(null, personalData1, skills2));
         Teammate replaced = new Teammate(1L, personalData1, skills1);
 
         when(skillService.insertNewSkill(any(Skill.class)))
-                .thenReturn(skillToSave);
+                .thenReturn(savedSkill);
         when(teammateRepository.save(any(Teammate.class)))
                 .thenReturn(replaced);
 
         Teammate result = teammateService.updateTeammate(1L, replacement);
 
         assertThat(result).isSameAs(replaced);
+        assertThat(replacement.getSkills()).isEqualTo(skills1);
         verify(skillService, times(1)).insertNewSkill(skillToSave);
-        verify(replacement).setSkills(skills1);
 
         InOrder inOrder = inOrder(replacement, teammateRepository);
         inOrder.verify(replacement).setId(1L);
