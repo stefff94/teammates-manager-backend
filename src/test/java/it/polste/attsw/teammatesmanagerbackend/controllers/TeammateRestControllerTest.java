@@ -2,6 +2,7 @@ package it.polste.attsw.teammatesmanagerbackend.controllers;
 
 import it.polste.attsw.teammatesmanagerbackend.models.PersonalData;
 import it.polste.attsw.teammatesmanagerbackend.models.Teammate;
+import it.polste.attsw.teammatesmanagerbackend.services.TeammateService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class TeammateRestControllerTest {
             .andExpect(content().json("[]"));
   }
 
+  @Test
   public void testGetAllTeammatesWhenNotEmpty() throws Exception {
     PersonalData stefanosData = new PersonalData("Stefano Vannucchi",
             "stefano.vannucchi@stud.unifi.it",
