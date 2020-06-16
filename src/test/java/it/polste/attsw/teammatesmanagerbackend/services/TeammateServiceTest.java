@@ -88,7 +88,8 @@ public class TeammateServiceTest {
 
         assertThat(result).isSameAs(saved);
         assertThat(toSave.getSkills()).isEqualTo(savedSkills);
-        verify(skillService, times(1)).insertNewSkill(skillToSave);
+        verify(skillService, times(toSave.getSkills().size()))
+                .insertNewSkill(skillToSave);
 
         logger.info("Inserted new teammate with id: " + saved.getId());
 
@@ -123,7 +124,6 @@ public class TeammateServiceTest {
 
         assertThat(result).isSameAs(replaced);
         assertThat(replacement.getSkills()).isEqualTo(savedSkills);
-        verify(skillService, times(1)).insertNewSkill(skillToSave);
 
         InOrder inOrder = inOrder(replacement, teammateRepository);
         inOrder.verify(replacement).setId(1L);
