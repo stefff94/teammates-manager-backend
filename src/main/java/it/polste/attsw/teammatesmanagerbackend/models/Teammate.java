@@ -10,6 +10,13 @@ public class Teammate {
     return id;
   }
 
+  public Teammate() {}
+
+  public Teammate(Long id, PersonalData personalData) {
+    this.id = id;
+    this.personalData = personalData;
+  }
+
   public void setId(Long id) {
     this.id = id;
   }
