@@ -35,6 +35,12 @@ public class TeammateService {
 
     public Teammate updateTeammate(Long id, Teammate teammate){
         teammate.setId(id);
+
+        Set<Skill> teammateSkills = new HashSet<>();
+        teammate.getSkills().forEach(skill ->
+                teammateSkills.add(skillService.insertNewSkill(skill)));
+        teammate.setSkills(teammateSkills);
+
         return teammateRepository.save(teammate);
     }
 

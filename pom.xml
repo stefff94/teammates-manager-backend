@@ -284,6 +284,9 @@
 							<targetTests>
 								<param>it.polste.attsw.teammatesmanagerbackend.services.*Test</param>
 							</targetTests>
+							<excludedClasses>
+								<param>it.polste.attsw.teammatesmanagerbackend.models.*</param>
+							</excludedClasses>
 							<mutators>
 								<mutator>DEFAULTS</mutator>
 								<mutator>NON_VOID_METHOD_CALLS</mutator>
