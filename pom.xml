@@ -277,8 +277,6 @@
 							<skip>false</skip>
 							<targetClasses>
 								<param>it.polste.attsw.teammatesmanagerbackend.services.*</param>
-								<!--								<param>it.polste.attsw.teammatesmanagerbackend.repositories.*</param>-->
-								<!--								<param>it.polste.attsw.teammatesmanagerbackend.controllers.*</param>-->
 							</targetClasses>
 							<targetTests>
 								<param>it.polste.attsw.teammatesmanagerbackend.services.*Test</param>
