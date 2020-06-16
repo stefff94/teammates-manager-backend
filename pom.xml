@@ -238,8 +238,7 @@
 							<excludes>
 								<exclude>**/*Application.*</exclude>
 								<exclude>**/models/*</exclude>
-								<exclude>it.polste.attsw.teammatesmanagerbackend.models.*</exclude>
-								<exclude>it.polste.attsw.teammatesmanagerbackend.repositories.*</exclude>
+								<exclude>**/repositories/*</exclude>
 							</excludes>
 						</configuration>
 						<executions>
@@ -284,9 +283,6 @@
 							<targetTests>
 								<param>it.polste.attsw.teammatesmanagerbackend.services.*Test</param>
 							</targetTests>
-							<excludedClasses>
-								<param>it.polste.attsw.teammatesmanagerbackend.models.*</param>
-							</excludedClasses>
 							<mutators>
 								<mutator>DEFAULTS</mutator>
 								<mutator>NON_VOID_METHOD_CALLS</mutator>
