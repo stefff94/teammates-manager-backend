@@ -10,9 +10,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.http.MediaType;
 
 import java.util.Arrays;
 
+import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.when;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.hasItems;
@@ -28,9 +30,26 @@ public class TeammateRestControllerTest {
   @InjectMocks
   private TeammateRestController teammateRestController;
 
+  private PersonalData stefanosData;
+  private PersonalData paolosData;
+
   @Before
   public void setup() {
     RestAssuredMockMvc.standaloneSetup(teammateRestController);
+
+    stefanosData = new PersonalData("Stefano Vannucchi",
+            "stefano.vannucchi@stud.unifi.it",
+            "M",
+            "Prato",
+            "student",
+            "https://semantic-ui.com/images/avatar/large/steve.jpg");
+
+    paolosData = new PersonalData("Paolo Innocenti",
+            "paolo.innocenti@stud.unifi.it",
+            "M",
+            "Pistoia",
+            "student",
+            "https://semantic-ui.com/images/avatar/large/elliot.jpg");
   }
 
   @Test
@@ -45,20 +64,6 @@ public class TeammateRestControllerTest {
 
   @Test
   public void testGetAllTeammatesWhenNotEmpty() {
-    PersonalData stefanosData = new PersonalData("Stefano Vannucchi",
-            "stefano.vannucchi@stud.unifi.it",
-            "M",
-            "Prato",
-            "student",
-            "https://semantic-ui.com/images/avatar/large/steve.jpg");
-
-    PersonalData paolosData = new PersonalData("Paolo Innocenti",
-            "paolo.innocenti@stud.unifi.it",
-            "M",
-            "Pistoia",
-            "student",
-            "https://semantic-ui.com/images/avatar/large/elliot.jpg");
-
     when(teammateService.getAllTeammates())
             .thenReturn(Arrays.asList(
                     new Teammate(1L, stefanosData),
@@ -84,6 +89,33 @@ public class TeammateRestControllerTest {
                             "https://semantic-ui.com/images/avatar/large/steve.jpg",
                             "https://semantic-ui.com/images/avatar/large/elliot.jpg"
                     )
+            );
+  }
+
+  @Test
+  public void testInsertNewTeammateWithSuccess() {
+    Teammate teammateToInsert = new Teammate(null, stefanosData);
+
+    when(teammateService.insertNewTeammate(teammateToInsert))
+            .thenReturn(new Teammate(null, stefanosData));
+
+    given().
+            contentType(MediaType.APPLICATION_JSON_VALUE).
+            body(teammateToInsert).
+    when().
+            post("/api/teammates/new").
+    then().
+            statusCode(200).
+            assertThat().
+            body(
+                    "id", hasItem(1),
+                    "personalData.name", hasItem("Stefano Vannucchi"),
+                    "personalData.email", hasItem("stefano.vannucchi@stud.unifi.it"),
+                    "personalData.gender", hasItem("M"),
+                    "personalData.city", hasItem("Prato"),
+                    "personalData.role", hasItem("student"),
+                    "personalData.photoUrl", hasItem(
+                            "https://semantic-ui.com/images/avatar/large/steve.jpg")
             );
   }
 
