@@ -20,7 +20,8 @@ cache:
     - $HOME/.m2
 
 deploy:
-  provider: heroku
+  provider: script
+  script:  "./mvnw clean heroku:deploy"
   api_key: $HEROKU_API_KEY
   on:
     branch: service
