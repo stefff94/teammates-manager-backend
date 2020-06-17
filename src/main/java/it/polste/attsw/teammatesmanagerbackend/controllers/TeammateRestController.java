@@ -28,4 +28,9 @@ public class TeammateRestController {
     return teammateService.insertNewTeammate(teammate);
   }
 
+  @DeleteMapping("/delete/{id}")
+  public void deleteTeammate(@PathVariable Long id) {
+    teammateService.deleteTeammate(id);
+  }
+
 }
