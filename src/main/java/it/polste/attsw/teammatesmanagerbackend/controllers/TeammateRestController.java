@@ -3,9 +3,7 @@ package it.polste.attsw.teammatesmanagerbackend.controllers;
 import it.polste.attsw.teammatesmanagerbackend.models.Teammate;
 import it.polste.attsw.teammatesmanagerbackend.services.TeammateService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,6 +21,11 @@ public class TeammateRestController {
   @GetMapping
   public List<Teammate> allTeammates() {
     return teammateService.getAllTeammates();
+  }
+
+  @PostMapping("/new")
+  public Teammate newTeammate(@RequestBody Teammate teammate) {
+    return teammateService.insertNewTeammate(teammate);
   }
 
 }

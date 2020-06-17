@@ -13,4 +13,8 @@ public class TeammateService {
   public List<Teammate> getAllTeammates() {
     throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION);
   }
+
+  public Teammate insertNewTeammate(Teammate teammate) {
+    throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION);
+  }
 }

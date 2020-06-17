@@ -2,22 +2,25 @@ package it.polste.attsw.teammatesmanagerbackend.controllers;
 
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import it.polste.attsw.teammatesmanagerbackend.models.PersonalData;
+import it.polste.attsw.teammatesmanagerbackend.models.Skill;
 import it.polste.attsw.teammatesmanagerbackend.models.Teammate;
 import it.polste.attsw.teammatesmanagerbackend.services.TeammateService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.when;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.empty;
 import static org.mockito.Mockito.when;
 
@@ -32,6 +35,7 @@ public class TeammateRestControllerTest {
 
   private PersonalData stefanosData;
   private PersonalData paolosData;
+  private Set<Skill> skills;
 
   @Before
   public void setup() {
@@ -50,6 +54,10 @@ public class TeammateRestControllerTest {
             "Pistoia",
             "student",
             "https://semantic-ui.com/images/avatar/large/elliot.jpg");
+
+    skills = new HashSet<>();
+    skills.add(new Skill(1L, "Spring Boot"));
+    skills.add(new Skill(2L, "Vue js"));
   }
 
   @Test
@@ -66,8 +74,8 @@ public class TeammateRestControllerTest {
   public void testGetAllTeammatesWhenNotEmpty() {
     when(teammateService.getAllTeammates())
             .thenReturn(Arrays.asList(
-                    new Teammate(1L, stefanosData),
-                    new Teammate(2L, paolosData)
+                    new Teammate(1L, stefanosData, skills),
+                    new Teammate(2L, paolosData, skills)
             ));
 
     when().
@@ -88,16 +96,18 @@ public class TeammateRestControllerTest {
                     "personalData.photoUrl", hasItems(
                             "https://semantic-ui.com/images/avatar/large/steve.jpg",
                             "https://semantic-ui.com/images/avatar/large/elliot.jpg"
-                    )
+                    ),
+                    "skills.id", everyItem(hasItems(1, 2)),
+                    "skills.name", everyItem(hasItems("Spring Boot", "Vue js"))
             );
   }
 
   @Test
   public void testInsertNewTeammateWithSuccess() {
-    Teammate teammateToInsert = new Teammate(null, stefanosData);
+    Teammate teammateToInsert = new Teammate(null, stefanosData, skills);
 
-    when(teammateService.insertNewTeammate(teammateToInsert))
-            .thenReturn(new Teammate(null, stefanosData));
+    when(teammateService.insertNewTeammate(ArgumentMatchers.any(Teammate.class)))
+            .thenReturn(new Teammate(1L, stefanosData, skills));
 
     given().
             contentType(MediaType.APPLICATION_JSON_VALUE).
@@ -108,14 +118,16 @@ public class TeammateRestControllerTest {
             statusCode(200).
             assertThat().
             body(
-                    "id", hasItem(1),
-                    "personalData.name", hasItem("Stefano Vannucchi"),
-                    "personalData.email", hasItem("stefano.vannucchi@stud.unifi.it"),
-                    "personalData.gender", hasItem("M"),
-                    "personalData.city", hasItem("Prato"),
-                    "personalData.role", hasItem("student"),
-                    "personalData.photoUrl", hasItem(
-                            "https://semantic-ui.com/images/avatar/large/steve.jpg")
+                    "id", equalTo(1),
+                    "personalData.name", equalTo("Stefano Vannucchi"),
+                    "personalData.email", equalTo("stefano.vannucchi@stud.unifi.it"),
+                    "personalData.gender", equalTo("M"),
+                    "personalData.city", equalTo("Prato"),
+                    "personalData.role", equalTo("student"),
+                    "personalData.photoUrl", equalTo(
+                            "https://semantic-ui.com/images/avatar/large/steve.jpg"),
+                    "skills.id", hasItems(1, 2),
+                    "skills.name", hasItems("Spring Boot", "Vue js")
             );
   }
 
