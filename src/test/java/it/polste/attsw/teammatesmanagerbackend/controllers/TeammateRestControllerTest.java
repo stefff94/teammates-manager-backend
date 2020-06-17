@@ -23,6 +23,8 @@ import static io.restassured.module.mockmvc.RestAssuredMockMvc.when;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.empty;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TeammateRestControllerTest {
@@ -129,6 +131,18 @@ public class TeammateRestControllerTest {
                     "skills.id", hasItems(1, 2),
                     "skills.name", hasItems("Spring Boot", "Vue js")
             );
+  }
+
+  @Test
+  public void testDeleteTeammateWithSuccess() {
+    Teammate teammateToDelete = new Teammate(1L, stefanosData, skills);
+
+    when().
+            delete("api/teammates/delete/" + teammateToDelete.getId()).
+    then().
+            statusCode(200);
+
+    verify(teammateService, times(1)).deleteTeammate(1L);
   }
 
 }
