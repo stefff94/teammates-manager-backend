@@ -78,6 +78,11 @@ public class PersonalData {
   }
 
   @Override
+  public int hashCode() {
+    return Objects.hash(name, email, gender, city, role, photoUrl);
+  }
+
+  @Override
   public boolean equals(Object obj) {
     if (this == obj)
       return true;

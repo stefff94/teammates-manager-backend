@@ -280,11 +280,6 @@
 						</executions>
 						<configuration>
 							<skip>true</skip>
-							<targetClasses>
-<!--								<param>it.polste.attsw.teammatesmanagerbackend.services.*</param>-->
-<!--								<param>it.polste.attsw.teammatesmanagerbackend.repositories.*</param>-->
-<!--								<param>it.polste.attsw.teammatesmanagerbackend.controllers.*</param>-->
-							</targetClasses>
 							<targetTests>
 								<param>**/*Test.java</param>
 							</targetTests>
