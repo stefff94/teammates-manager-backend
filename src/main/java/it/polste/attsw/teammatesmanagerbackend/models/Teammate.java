@@ -14,6 +14,10 @@ public class Teammate {
   @Embedded
   private PersonalData personalData;
 
+  @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+  @JoinTable(name = "teammate_skills",
+          joinColumns = { @JoinColumn(name = "teammate_id") },
+          inverseJoinColumns = { @JoinColumn(name = "skill_id") })
   private Set<Skill> skills = new HashSet<>();
 
   public Teammate() {}

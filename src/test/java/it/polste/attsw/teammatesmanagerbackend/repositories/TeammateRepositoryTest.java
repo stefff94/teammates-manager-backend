@@ -45,7 +45,7 @@ public class TeammateRepositoryTest {
             "https://semantic-ui.com/images/avatar/large/steve.jpg");
 
     skills = new HashSet<>();
-    skills.add(new Skill(1L, "Spring Boot"));
+    skills.add(new Skill(1L, "Java"));
     skills.add(new Skill(2L, "Vue js"));
 
     teammate = new Teammate(null, personalData, skills);

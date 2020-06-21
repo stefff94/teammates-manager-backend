@@ -34,14 +34,15 @@ public class TeammateJpaTest {
             "https://semantic-ui.com/images/avatar/large/steve.jpg");
 
     Set<Skill> skills = new HashSet<>();
-    skills.add(new Skill(1L, "Spring Boot"));
+    skills.add(new Skill(1L, "Java"));
     skills.add(new Skill(2L, "Vue js"));
 
     Teammate teammate =
             entityManager.persistFlushFind(new Teammate(null, personalData, skills));
 
     assertThat(teammate.getPersonalData()).isEqualTo(personalData);
-    assertThat(teammate.getSkills()).isEqualTo(skills);
+    assertThat(teammate.getSkills())
+            .containsExactlyInAnyOrderElementsOf(skills);
     assertThat(teammate.getId()).isNotNull();
     assertThat(teammate.getId()).isGreaterThan(0);
 
