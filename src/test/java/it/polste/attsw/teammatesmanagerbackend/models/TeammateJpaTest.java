@@ -9,6 +9,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -30,10 +33,15 @@ public class TeammateJpaTest {
             "student",
             "https://semantic-ui.com/images/avatar/large/steve.jpg");
 
+    Set<Skill> skills = new HashSet<>();
+    skills.add(new Skill(1L, "Spring Boot"));
+    skills.add(new Skill(2L, "Vue js"));
+
     Teammate teammate =
-            entityManager.persistFlushFind(new Teammate(null, personalData));
+            entityManager.persistFlushFind(new Teammate(null, personalData, skills));
 
     assertThat(teammate.getPersonalData()).isEqualTo(personalData);
+    assertThat(teammate.getSkills()).isEqualTo(skills);
     assertThat(teammate.getId()).isNotNull();
     assertThat(teammate.getId()).isGreaterThan(0);
 

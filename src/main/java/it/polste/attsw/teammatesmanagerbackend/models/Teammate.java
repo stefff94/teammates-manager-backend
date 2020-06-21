@@ -1,6 +1,8 @@
 package it.polste.attsw.teammatesmanagerbackend.models;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "teammates")
@@ -12,11 +14,14 @@ public class Teammate {
   @Embedded
   private PersonalData personalData;
 
+  private Set<Skill> skills = new HashSet<>();
+
   public Teammate() {}
 
-  public Teammate(Long id, PersonalData personalData) {
+  public Teammate(Long id, PersonalData personalData, Set<Skill> skills) {
     this.id = id;
     this.personalData = personalData;
+    this.skills = skills;
   }
 
   public Long getId() {
@@ -33,5 +38,13 @@ public class Teammate {
 
   public void setPersonalData(PersonalData personalData) {
     this.personalData = personalData;
+  }
+
+  public Set<Skill> getSkills() {
+    return skills;
+  }
+
+  public void setSkills(Set<Skill> skills) {
+    this.skills = skills;
   }
 }
