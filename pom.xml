@@ -279,7 +279,6 @@
 							</execution>
 						</executions>
 						<configuration>
-							<!--<skip>true</skip>-->
 							<targetClasses>
 								<param>it.polste.attsw.teammatesmanagerbackend.controllers.*</param>
 							</targetClasses>
