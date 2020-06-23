@@ -24,7 +24,7 @@ deploy:
   script:  "./mvnw clean heroku:deploy"
   api_key: $HEROKU_API_KEY
   on:
-    branch: service
+    branch: master
 
 script:
   - ./mvnw clean verify -Pjacoco && ./mvnw coveralls:report sonar:sonar

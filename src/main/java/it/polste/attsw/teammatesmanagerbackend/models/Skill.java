@@ -8,7 +8,7 @@ public class Skill {
 
   public Skill() {}
 
-  public Skill(long id, String skillName) {
+  public Skill(Long id, String skillName) {
     this.id = id;
     this.name = skillName;
   }

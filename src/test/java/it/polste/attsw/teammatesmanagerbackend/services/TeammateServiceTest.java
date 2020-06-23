@@ -7,13 +7,16 @@ import it.polste.attsw.teammatesmanagerbackend.repositories.TeammateRepository;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import static java.util.Arrays.asList;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.rules.ExpectedException;
+
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
@@ -21,7 +24,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -37,6 +40,9 @@ public class TeammateServiceTest {
 
     @InjectMocks
     private TeammateService teammateService;
+
+    @Rule
+    public final ExpectedException thrown = ExpectedException.none();
 
     private PersonalData personalData1;
     private PersonalData personalData2;
@@ -100,14 +106,21 @@ public class TeammateServiceTest {
     }
 
     @Test
-    public void deleteTeammateTest(){
-        Teammate teammate = new Teammate(1L, personalData1, savedSkills);
-
-        when(teammateRepository.findById(1L)).thenReturn(Optional.of(teammate));
+    public void deleteExistingTeammateSucceedTest(){
         teammateService.deleteTeammate(1L);
 
         verify(teammateRepository, times(1)).deleteById(1L);
-        logger.info("Deleted teammate with id: " + teammate.getId());
+        logger.info("Deleted teammate with id: " + 1L);
+    }
+
+    @Test
+    public void deleteMissingTeammateThrowsIllegalArgumentExceptionTest(){
+        doThrow(new EmptyResultDataAccessException(1)).when(teammateRepository).deleteById(1L);
+
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("No Teammate with id 1 exists!");
+
+        teammateService.deleteTeammate(1L);
     }
 
     @Test
@@ -125,8 +138,9 @@ public class TeammateServiceTest {
         assertThat(result).isSameAs(replaced);
         assertThat(replacement.getSkills()).isEqualTo(savedSkills);
 
-        InOrder inOrder = inOrder(replacement, teammateRepository);
+        InOrder inOrder = inOrder(replacement, skillService, teammateRepository);
         inOrder.verify(replacement).setId(1L);
+        inOrder.verify(skillService).insertNewSkill(skillToSave);
         inOrder.verify(teammateRepository).save(replacement);
         logger.info("Updated teammate with id: " + replaced.getId());
     }

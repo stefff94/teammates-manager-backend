@@ -24,7 +24,9 @@ public class SkillService {
 
     public Skill insertNewSkill(Skill skill){
         List<Skill> skills = skillRepository.findAll();
-        Optional<Skill> savedSkill = skills.stream().filter(s -> s.getName().equalsIgnoreCase(skill.getName().toLowerCase())).findFirst();
+        Optional<Skill> savedSkill = skills.stream()
+                .filter(s -> s.getName().equalsIgnoreCase(skill.getName().toLowerCase()))
+                .findFirst();
         if(savedSkill.isPresent()){
             return savedSkill.get();
         }else{
