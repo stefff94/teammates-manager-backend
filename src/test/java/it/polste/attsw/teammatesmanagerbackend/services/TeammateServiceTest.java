@@ -7,9 +7,11 @@ import it.polste.attsw.teammatesmanagerbackend.repositories.TeammateRepository;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import static java.util.Arrays.asList;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -106,16 +108,20 @@ public class TeammateServiceTest {
     }
 
     @Test
-    public void deleteExistingTeammateSucceedTest(){
+    public void deleteTeammateSucceedsWithExistingTeammateTest(){
+        Teammate teammate = new Teammate(1L, personalData1, savedSkills);
+
+        when(teammateRepository.findById(1L)).thenReturn(Optional.of(teammate));
         teammateService.deleteTeammate(1L);
 
         verify(teammateRepository, times(1)).deleteById(1L);
-        logger.info("Deleted teammate with id: " + 1L);
+        logger.info("Deleted teammate with id: " + teammate.getId());
     }
 
     @Test
-    public void deleteMissingTeammateThrowsIllegalArgumentExceptionTest(){
-        doThrow(new EmptyResultDataAccessException(1)).when(teammateRepository).deleteById(1L);
+    public void deleteTeammateThrowsIllegalArgumentExceptionWithTeammateMissingTest(){
+        when(teammateRepository.findById(any(Long.class)))
+                .thenReturn(Optional.empty());
 
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("No Teammate with id 1 exists!");
@@ -143,5 +149,17 @@ public class TeammateServiceTest {
         inOrder.verify(skillService).insertNewSkill(skillToSave);
         inOrder.verify(teammateRepository).save(replacement);
         logger.info("Updated teammate with id: " + replaced.getId());
+    }
+
+    @Test
+    public void updateTeammateByIdThrowsIllegalArgumentExceptionIfTeammateIsMissingTest(){
+        Teammate toSave = new Teammate(999L, personalData1, toSaveSkills);
+        when(teammateRepository.findById(any(Long.class)))
+                .thenReturn(Optional.empty());
+
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("No Teammate with id 1 exists!");
+
+        teammateService.updateTeammate(1L, toSave);
     }
 }

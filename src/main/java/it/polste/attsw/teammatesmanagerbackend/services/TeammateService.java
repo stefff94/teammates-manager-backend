@@ -3,7 +3,6 @@ package it.polste.attsw.teammatesmanagerbackend.services;
 import it.polste.attsw.teammatesmanagerbackend.models.Skill;
 import it.polste.attsw.teammatesmanagerbackend.models.Teammate;
 import it.polste.attsw.teammatesmanagerbackend.repositories.TeammateRepository;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -48,12 +47,15 @@ public class TeammateService {
         return teammateRepository.save(teammate);
     }
 
-    public void deleteTeammate(Long id) {
-        try{
+    public void deleteTeammate(Long id){
+        Optional<Teammate> teammate = teammateRepository.findById(id);
+
+        if(teammate.isPresent()){
             teammateRepository.deleteById(id);
-        }catch(EmptyResultDataAccessException e){
+        }else{
             String message = "No Teammate with id " + id + " exists!";
             throw new IllegalArgumentException(message);
         }
+
     }
 }
