@@ -11,7 +11,6 @@ import java.util.Optional;
 import java.util.Set;
 import static java.util.Arrays.asList;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,7 +25,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -136,6 +134,8 @@ public class TeammateServiceTest {
 
         when(skillService.insertNewSkill(any(Skill.class)))
                 .thenReturn(savedSkill);
+        when(teammateRepository.findById(1L))
+                .thenReturn(Optional.of(replaced));
         when(teammateRepository.save(any(Teammate.class)))
                 .thenReturn(replaced);
 

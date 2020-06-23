@@ -39,12 +39,18 @@ public class TeammateService {
     }
 
     public Teammate updateTeammate(Long id, Teammate teammate){
-        teammate.setId(id);
+        Optional<Teammate> existingTeammate = teammateRepository.findById(id);
+        if(existingTeammate.isPresent()){
+            teammate.setId(id);
 
-        Set<Skill> savedSkills = saveSkillsForTeammate(teammate.getSkills());
-        teammate.setSkills(savedSkills);
+            Set<Skill> savedSkills = saveSkillsForTeammate(teammate.getSkills());
+            teammate.setSkills(savedSkills);
 
-        return teammateRepository.save(teammate);
+            return teammateRepository.save(teammate);
+        }else{
+            throw new IllegalArgumentException("No Teammate with id " + id + " exists!");
+        }
+
     }
 
     public void deleteTeammate(Long id){
