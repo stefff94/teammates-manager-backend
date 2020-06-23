@@ -1,6 +1,8 @@
 package it.polste.attsw.teammatesmanagerbackend.models;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.persistence.PersistenceException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,6 +26,9 @@ public class TeammateJpaTest {
 
   @Autowired
   private TestEntityManager entityManager;
+
+  @Rule
+  public ExpectedException thrown = ExpectedException.none();
 
   @Test
   public void testJpaMapping() {
@@ -47,6 +53,34 @@ public class TeammateJpaTest {
     assertThat(teammate.getId()).isGreaterThan(0);
 
     logger.info("Persisted entity with id:" + teammate.getId());
+  }
+
+  @Test
+  public void testJpaMappingWhenMultipleTeammateWithSameEmail() {
+    PersonalData personalData = new PersonalData("Stefano Vannucchi",
+            "stefano.vannucchi@stud.unifi.it",
+            "M",
+            "Prato",
+            "student",
+            "https://semantic-ui.com/images/avatar/large/steve.jpg");
+
+    PersonalData personalDataCopy = new PersonalData("Stefano Vannucchi",
+            "stefano.vannucchi@stud.unifi.it",
+            "M",
+            "Prato",
+            "student",
+            "https://semantic-ui.com/images/avatar/large/steve.jpg");
+
+    Set<Skill> skills = new HashSet<>();
+    skills.add(new Skill(1L, "Java"));
+    skills.add(new Skill(2L, "Vue js"));
+
+    entityManager.persist(new Teammate(null, personalData, skills));
+
+    thrown.expect(PersistenceException.class);
+    thrown.expectMessage("could not execute statement");
+    entityManager.persist(new Teammate(null, personalDataCopy, skills));
+
   }
 
 }
