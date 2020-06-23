@@ -23,7 +23,17 @@ public class TeammateService {
     }
 
     public Teammate insertNewTeammate(Teammate teammate){
-        return setTeammateData(null, teammate);
+        if(!teammateMailExists(teammate)){
+            return setTeammateData(null, teammate);
+        }else{
+            throw new IllegalArgumentException("This mail has already been associated with a Teammate");
+        }
+    }
+
+    private boolean teammateMailExists(Teammate teammate) {
+        String mail = teammate.getPersonalData().getEmail();
+        Optional<Teammate> existingMail = teammateRepository.findByMail(mail);
+        return existingMail.isPresent();
     }
 
     private Teammate setTeammateData(Long id, Teammate teammate){
@@ -43,8 +53,7 @@ public class TeammateService {
     }
 
     public Teammate updateTeammate(Long id, Teammate teammate){
-        String mail = teammate.getPersonalData().getEmail();
-        if(mailExists(mail)){
+        if(teammateMailExists(teammate)){
             throw new IllegalArgumentException("This mail has already been associated with a Teammate");
         }
 
@@ -54,11 +63,6 @@ public class TeammateService {
         }else{
             throw new IllegalArgumentException("No Teammate with id " + id + " exists!");
         }
-    }
-
-    private boolean mailExists(String mail) {
-        Optional<Teammate> existingMail = teammateRepository.findByMail(mail);
-        return existingMail.isPresent();
     }
 
     public void deleteTeammate(Long id){
