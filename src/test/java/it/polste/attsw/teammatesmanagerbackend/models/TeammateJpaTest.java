@@ -1,5 +1,6 @@
 package it.polste.attsw.teammatesmanagerbackend.models;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -30,19 +31,26 @@ public class TeammateJpaTest {
   @Rule
   public ExpectedException thrown = ExpectedException.none();
 
-  @Test
-  public void testJpaMapping() {
-    PersonalData personalData = new PersonalData("Stefano Vannucchi",
+  private PersonalData personalData;
+
+  private Set<Skill> skills;
+
+  @Before
+  public void setup() {
+    personalData = new PersonalData("Stefano Vannucchi",
             "stefano.vannucchi@stud.unifi.it",
             "M",
             "Prato",
             "student",
             "https://semantic-ui.com/images/avatar/large/steve.jpg");
 
-    Set<Skill> skills = new HashSet<>();
+    skills = new HashSet<>();
     skills.add(new Skill(1L, "Java"));
     skills.add(new Skill(2L, "Vue js"));
+  }
 
+  @Test
+  public void testJpaMapping() {
     Teammate teammate =
             entityManager.persistFlushFind(new Teammate(null, personalData, skills));
 
@@ -57,13 +65,6 @@ public class TeammateJpaTest {
 
   @Test
   public void testJpaMappingWhenMultipleTeammateWithSameEmail() {
-    PersonalData personalData = new PersonalData("Stefano Vannucchi",
-            "stefano.vannucchi@stud.unifi.it",
-            "M",
-            "Prato",
-            "student",
-            "https://semantic-ui.com/images/avatar/large/steve.jpg");
-
     PersonalData personalDataCopy = new PersonalData("Stefano Vannucchi",
             "stefano.vannucchi@stud.unifi.it",
             "M",
@@ -71,16 +72,14 @@ public class TeammateJpaTest {
             "student",
             "https://semantic-ui.com/images/avatar/large/steve.jpg");
 
-    Set<Skill> skills = new HashSet<>();
-    skills.add(new Skill(1L, "Java"));
-    skills.add(new Skill(2L, "Vue js"));
+    Teammate teammate =
+            entityManager.persistFlushFind(new Teammate(null, personalData, skills));
 
-    entityManager.persist(new Teammate(null, personalData, skills));
+    logger.info("Persisted entity with id:" + teammate.getId());
 
     thrown.expect(PersistenceException.class);
     thrown.expectMessage("could not execute statement");
     entityManager.persist(new Teammate(null, personalDataCopy, skills));
-
   }
 
 }
