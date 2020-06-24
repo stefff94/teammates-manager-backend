@@ -1,6 +1,7 @@
 package it.polste.attsw.teammatesmanagerbackend.controllers;
 
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
+import it.polste.attsw.teammatesmanagerbackend.exceptions.AlreadyExistingTeammateException;
 import it.polste.attsw.teammatesmanagerbackend.exceptions.TeammateNotExistsException;
 import it.polste.attsw.teammatesmanagerbackend.exceptions.TeammateRestControllerExceptionHandler;
 import it.polste.attsw.teammatesmanagerbackend.models.PersonalData;
@@ -147,7 +148,7 @@ public class TeammateRestControllerTest {
 
     String message = "The entered email has already been associated with a Teammate";
     when(teammateService.insertNewTeammate(ArgumentMatchers.any(Teammate.class)))
-            .thenThrow(new AlreadyExistentTeammateException(message));
+            .thenThrow(new AlreadyExistingTeammateException(message));
 
     given().
             contentType(MediaType.APPLICATION_JSON_VALUE).

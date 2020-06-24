@@ -17,9 +17,10 @@ import java.util.Map;
 public class TeammateRestControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  @ExceptionHandler(TeammateNotExistsException.class)
+  @ExceptionHandler({TeammateNotExistsException.class,
+          AlreadyExistingTeammateException.class})
   public ResponseEntity<Object> handleTeammateNotFoundException(
-          TeammateNotExistsException e, WebRequest webRequest) {
+          Exception e, WebRequest webRequest) {
 
     Map<String, String> body = new HashMap<>();
     body.put("message", e.getMessage());
