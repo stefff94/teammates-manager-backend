@@ -14,11 +14,13 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.context.request.WebRequest;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.when;
@@ -40,12 +42,18 @@ public class TeammateRestControllerTest {
   @InjectMocks
   private TeammateRestController teammateRestController;
 
-  @InjectMocks
+  @Mock
   private TeammateRestControllerExceptionHandler teammateRestControllerExceptionHandler;
 
   private PersonalData stefanosData;
   private PersonalData paolosData;
   private Set<Skill> skills;
+
+  ResponseEntity<Object> responseEntityWhenAlreadyExistingTeammate;
+  ResponseEntity<Object> responseEntityWhenTeammateNotExists;
+
+  private String alreadyExistingTeammateMessage;
+  private String teammateNotExistsMessage;
 
   @Before
   public void setup() {
@@ -69,6 +77,29 @@ public class TeammateRestControllerTest {
     skills = new HashSet<>();
     skills.add(new Skill(1L, "Spring Boot"));
     skills.add(new Skill(2L, "Vue js"));
+
+    alreadyExistingTeammateMessage =
+            "The entered email has already been associated with a Teammate";
+    teammateNotExistsMessage = "No Teammate with id 1 exists!";
+
+    HttpHeaders responseHeader = new HttpHeaders();
+    responseHeader.setContentType(MediaType.APPLICATION_JSON);
+
+    Map<String, String> responseBody = new HashMap<>();
+    responseBody.put("message", alreadyExistingTeammateMessage);
+    responseEntityWhenAlreadyExistingTeammate = new ResponseEntity<>(
+            responseBody,
+            responseHeader,
+            HttpStatus.INTERNAL_SERVER_ERROR
+    );
+
+    responseBody = new HashMap<>();
+    responseBody.put("message", teammateNotExistsMessage);
+    responseEntityWhenTeammateNotExists = new ResponseEntity<>(
+            responseBody,
+            responseHeader,
+            HttpStatus.INTERNAL_SERVER_ERROR
+    );
   }
 
   @Test
@@ -146,9 +177,12 @@ public class TeammateRestControllerTest {
   public void testInsertNewTeammateWhenDuplicateEmail() {
     Teammate teammateToInsert = new Teammate(null, stefanosData, skills);
 
-    String message = "The entered email has already been associated with a Teammate";
     when(teammateService.insertNewTeammate(any(Teammate.class)))
-            .thenThrow(new AlreadyExistingTeammateException(message));
+            .thenThrow(new AlreadyExistingTeammateException(alreadyExistingTeammateMessage));
+
+    when(teammateRestControllerExceptionHandler.handleTeammateException(
+            any(AlreadyExistingTeammateException.class), any(WebRequest.class)))
+            .thenReturn(responseEntityWhenAlreadyExistingTeammate);
 
     given().
             contentType(MediaType.APPLICATION_JSON_VALUE).
@@ -158,7 +192,7 @@ public class TeammateRestControllerTest {
     then().
             statusCode(500).
             assertThat().
-            body("message", equalTo(message));
+            body("message", equalTo(alreadyExistingTeammateMessage));
   }
 
   @Test
@@ -194,9 +228,12 @@ public class TeammateRestControllerTest {
   public void testUpdateTeammateWhenNoExisting() {
     Teammate teammateToUpdate = new Teammate(null, stefanosData, skills);
 
-    String message = "No Teammate with id 1 exists!";
     when(teammateService.updateTeammate(anyLong(), any(Teammate.class)))
-            .thenThrow(new TeammateNotExistsException(message));
+            .thenThrow(new TeammateNotExistsException(teammateNotExistsMessage));
+
+    when(teammateRestControllerExceptionHandler.handleTeammateException(
+            any(TeammateNotExistsException.class), any(WebRequest.class)))
+            .thenReturn(responseEntityWhenTeammateNotExists);
 
     given().
             contentType(MediaType.APPLICATION_JSON_VALUE).
@@ -206,7 +243,29 @@ public class TeammateRestControllerTest {
     then().
             statusCode(500).
             assertThat().
-            body("message", equalTo(message));
+            body("message", equalTo(teammateNotExistsMessage));
+  }
+
+  @Test
+  public void testUpdateTeammateWhenDuplicateEmail() {
+    Teammate teammateToUpdate = new Teammate(null, stefanosData, skills);
+
+    when(teammateService.updateTeammate(anyLong(), any(Teammate.class)))
+            .thenThrow(new AlreadyExistingTeammateException(alreadyExistingTeammateMessage));
+
+    when(teammateRestControllerExceptionHandler.handleTeammateException(
+            any(AlreadyExistingTeammateException.class), any(WebRequest.class)))
+            .thenReturn(responseEntityWhenAlreadyExistingTeammate);
+
+    given().
+            contentType(MediaType.APPLICATION_JSON_VALUE).
+            body(teammateToUpdate).
+    when().
+            put("/api/teammates/update/1").
+    then().
+            statusCode(500).
+            assertThat().
+            body("message", equalTo(alreadyExistingTeammateMessage));
   }
 
   @Test
@@ -221,16 +280,19 @@ public class TeammateRestControllerTest {
 
   @Test
   public void testDeleteTeammateWhenNotExists() {
-    String message = "No Teammate with id 1 exists!";
-    doThrow(new TeammateNotExistsException(message))
+    doThrow(new TeammateNotExistsException(teammateNotExistsMessage))
             .when(teammateService).deleteTeammate(1L);
+
+    when(teammateRestControllerExceptionHandler.handleTeammateException(
+            any(TeammateNotExistsException.class), any(WebRequest.class)))
+            .thenReturn(responseEntityWhenTeammateNotExists);
 
     when().
             delete("api/teammates/delete/1").
     then().
             statusCode(500).
             assertThat().
-            body("message", equalTo(message));
+            body("message", equalTo(teammateNotExistsMessage));
   }
 
 }
