@@ -18,6 +18,10 @@ public class TeammateService {
     throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION);
   }
 
+  public Teammate updateTeammate(Long id, Teammate teammate) {
+    throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION);
+  }
+
   public void deleteTeammate(Long id) {
     throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION);
   }

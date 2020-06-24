@@ -28,6 +28,11 @@ public class TeammateRestController {
     return teammateService.insertNewTeammate(teammate);
   }
 
+  @PutMapping("/update/{id}")
+  public Teammate updateTeammate(@PathVariable Long id, @RequestBody Teammate teammate) {
+    return teammateService.updateTeammate(id, teammate);
+  }
+
   @DeleteMapping("/delete/{id}")
   public void deleteTeammate(@PathVariable Long id) {
     teammateService.deleteTeammate(id);

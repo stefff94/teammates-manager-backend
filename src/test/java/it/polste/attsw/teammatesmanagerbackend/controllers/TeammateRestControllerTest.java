@@ -22,6 +22,7 @@ import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.when;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.empty;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -137,7 +138,7 @@ public class TeammateRestControllerTest {
   public void testUpdateNewTeammateWithSuccess() {
     Teammate teammateToUpdate = new Teammate(null, stefanosData, skills);
 
-    when(teammateService.updateTeammate(1L, teammateToUpdate))
+    when(teammateService.updateTeammate(anyLong(), ArgumentMatchers.any(Teammate.class)))
             .thenReturn(new Teammate(1L, stefanosData, skills));
 
     given().
