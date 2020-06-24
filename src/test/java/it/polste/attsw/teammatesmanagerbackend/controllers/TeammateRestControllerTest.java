@@ -142,6 +142,25 @@ public class TeammateRestControllerTest {
   }
 
   @Test
+  public void testInsertNewTeammateWhenDuplicateEmail() {
+    Teammate teammateToInsert = new Teammate(null, stefanosData, skills);
+
+    String message = "The entered email has already been associated with a Teammate";
+    when(teammateService.insertNewTeammate(ArgumentMatchers.any(Teammate.class)))
+            .thenThrow(new AlreadyExistentTeammateException(message));
+
+    given().
+            contentType(MediaType.APPLICATION_JSON_VALUE).
+            body(teammateToInsert).
+    when().
+            post("/api/teammates/new").
+    then().
+            statusCode(500).
+            assertThat().
+            body("message", equalTo(message));
+  }
+
+  @Test
   public void testUpdateNewTeammateWithSuccess() {
     Teammate teammateToUpdate = new Teammate(null, stefanosData, skills);
 
@@ -191,7 +210,6 @@ public class TeammateRestControllerTest {
             statusCode(500).
             assertThat().
             body("message", equalTo("No Teammate with id 1 exists!"));
-
   }
 
 }
