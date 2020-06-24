@@ -134,11 +134,38 @@ public class TeammateRestControllerTest {
   }
 
   @Test
-  public void testDeleteTeammateWithSuccess() {
-    Teammate teammateToDelete = new Teammate(1L, stefanosData, skills);
+  public void testUpdateNewTeammateWithSuccess() {
+    Teammate teammateToUpdate = new Teammate(null, stefanosData, skills);
 
+    when(teammateService.updateTeammate(1L, teammateToUpdate))
+            .thenReturn(new Teammate(1L, stefanosData, skills));
+
+    given().
+            contentType(MediaType.APPLICATION_JSON_VALUE).
+            body(teammateToUpdate).
     when().
-            delete("api/teammates/delete/" + teammateToDelete.getId()).
+            put("/api/teammates/update/1").
+    then().
+            statusCode(200).
+            assertThat().
+            body(
+                    "id", equalTo(1),
+                    "personalData.name", equalTo("Stefano Vannucchi"),
+                    "personalData.email", equalTo("stefano.vannucchi@stud.unifi.it"),
+                    "personalData.gender", equalTo("M"),
+                    "personalData.city", equalTo("Prato"),
+                    "personalData.role", equalTo("student"),
+                    "personalData.photoUrl", equalTo(
+                            "https://semantic-ui.com/images/avatar/large/steve.jpg"),
+                    "skills.id", hasItems(1, 2),
+                    "skills.name", hasItems("Spring Boot", "Vue js")
+            );
+  }
+
+  @Test
+  public void testDeleteTeammateWithSuccess() {
+    when().
+            delete("api/teammates/delete/" + 1).
     then().
             statusCode(200);
 
