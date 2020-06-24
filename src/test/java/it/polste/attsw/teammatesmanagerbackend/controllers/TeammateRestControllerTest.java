@@ -1,6 +1,8 @@
 package it.polste.attsw.teammatesmanagerbackend.controllers;
 
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
+import it.polste.attsw.teammatesmanagerbackend.exceptions.TeammateNotExistsException;
+import it.polste.attsw.teammatesmanagerbackend.exceptions.TeammateRestControllerExceptionHandler;
 import it.polste.attsw.teammatesmanagerbackend.models.PersonalData;
 import it.polste.attsw.teammatesmanagerbackend.models.Skill;
 import it.polste.attsw.teammatesmanagerbackend.models.Teammate;
@@ -11,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 
@@ -26,6 +29,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.doThrow;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TeammateRestControllerTest {
@@ -36,13 +40,17 @@ public class TeammateRestControllerTest {
   @InjectMocks
   private TeammateRestController teammateRestController;
 
+  @InjectMocks
+  private TeammateRestControllerExceptionHandler teammateRestControllerExceptionHandler;
+
   private PersonalData stefanosData;
   private PersonalData paolosData;
   private Set<Skill> skills;
 
   @Before
   public void setup() {
-    RestAssuredMockMvc.standaloneSetup(teammateRestController);
+    RestAssuredMockMvc.standaloneSetup(teammateRestController,
+            teammateRestControllerExceptionHandler);
 
     stefanosData = new PersonalData("Stefano Vannucchi",
             "stefano.vannucchi@stud.unifi.it",
@@ -166,11 +174,25 @@ public class TeammateRestControllerTest {
   @Test
   public void testDeleteTeammateWithSuccess() {
     when().
-            delete("api/teammates/delete/" + 1).
+            delete("api/teammates/delete/1").
     then().
             statusCode(200);
 
     verify(teammateService, times(1)).deleteTeammate(1L);
+  }
+
+  @Test
+  public void testDeleteTeammateWhenNotExists() {
+    doThrow(new TeammateNotExistsException("No Teammate with id 1 exists!"))
+            .when(teammateService).deleteTeammate(1L);
+
+    when().
+            delete("api/teammates/delete/1").
+    then().
+            statusCode(500).
+            assertThat().
+            body("message", equalTo("No Teammate with id 1 exists!"));
+
   }
 
 }
