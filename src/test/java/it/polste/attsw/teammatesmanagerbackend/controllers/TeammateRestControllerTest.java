@@ -11,7 +11,6 @@ import it.polste.attsw.teammatesmanagerbackend.services.TeammateService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -26,6 +25,7 @@ import static io.restassured.module.mockmvc.RestAssuredMockMvc.when;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.empty;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -117,7 +117,7 @@ public class TeammateRestControllerTest {
   public void testInsertNewTeammateWithSuccess() {
     Teammate teammateToInsert = new Teammate(null, stefanosData, skills);
 
-    when(teammateService.insertNewTeammate(ArgumentMatchers.any(Teammate.class)))
+    when(teammateService.insertNewTeammate(any(Teammate.class)))
             .thenReturn(new Teammate(1L, stefanosData, skills));
 
     given().
@@ -147,7 +147,7 @@ public class TeammateRestControllerTest {
     Teammate teammateToInsert = new Teammate(null, stefanosData, skills);
 
     String message = "The entered email has already been associated with a Teammate";
-    when(teammateService.insertNewTeammate(ArgumentMatchers.any(Teammate.class)))
+    when(teammateService.insertNewTeammate(any(Teammate.class)))
             .thenThrow(new AlreadyExistingTeammateException(message));
 
     given().
@@ -162,10 +162,10 @@ public class TeammateRestControllerTest {
   }
 
   @Test
-  public void testUpdateNewTeammateWithSuccess() {
+  public void testUpdateTeammateWithSuccess() {
     Teammate teammateToUpdate = new Teammate(null, stefanosData, skills);
 
-    when(teammateService.updateTeammate(anyLong(), ArgumentMatchers.any(Teammate.class)))
+    when(teammateService.updateTeammate(anyLong(), any(Teammate.class)))
             .thenReturn(new Teammate(1L, stefanosData, skills));
 
     given().
@@ -191,6 +191,25 @@ public class TeammateRestControllerTest {
   }
 
   @Test
+  public void testUpdateTeammateWhenNoExisting() {
+    Teammate teammateToUpdate = new Teammate(null, stefanosData, skills);
+
+    String message = "No Teammate with id 1 exists!";
+    when(teammateService.updateTeammate(anyLong(), any(Teammate.class)))
+            .thenThrow(new TeammateNotExistsException(message));
+
+    given().
+            contentType(MediaType.APPLICATION_JSON_VALUE).
+            body(teammateToUpdate).
+    when().
+            put("/api/teammates/update/1").
+    then().
+            statusCode(500).
+            assertThat().
+            body("message", equalTo(message));
+  }
+
+  @Test
   public void testDeleteTeammateWithSuccess() {
     when().
             delete("api/teammates/delete/1").
@@ -202,7 +221,8 @@ public class TeammateRestControllerTest {
 
   @Test
   public void testDeleteTeammateWhenNotExists() {
-    doThrow(new TeammateNotExistsException("No Teammate with id 1 exists!"))
+    String message = "No Teammate with id 1 exists!";
+    doThrow(new TeammateNotExistsException(message))
             .when(teammateService).deleteTeammate(1L);
 
     when().
@@ -210,7 +230,7 @@ public class TeammateRestControllerTest {
     then().
             statusCode(500).
             assertThat().
-            body("message", equalTo("No Teammate with id 1 exists!"));
+            body("message", equalTo(message));
   }
 
 }
