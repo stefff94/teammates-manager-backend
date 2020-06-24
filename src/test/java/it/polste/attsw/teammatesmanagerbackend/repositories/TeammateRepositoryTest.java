@@ -71,4 +71,16 @@ public class TeammateRepositoryTest {
             + teammates.get(0).getId());
   }
 
+  @Test
+  public void findTeammateByEmailTest() {
+    Teammate persistedTeammate = testEntityManager.persistFlushFind(teammate);
+    Teammate foundTeammate = teammateRepository
+            .findByEmail("stefano.vannucchi@stud.unifi.it");
+
+    assertThat(foundTeammate).isEqualTo(persistedTeammate);
+
+    logger.info("Persisted and retrieved entity with email: "
+            + foundTeammate.getPersonalData().getEmail());
+  }
+
 }
