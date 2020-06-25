@@ -1,7 +1,7 @@
 package it.polste.attsw.teammatesmanagerbackend.controllers;
 
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
-import it.polste.attsw.teammatesmanagerbackend.exceptions.AlreadyExistingTeammateException;
+import it.polste.attsw.teammatesmanagerbackend.exceptions.TeammateAlreadyExistsException;
 import it.polste.attsw.teammatesmanagerbackend.exceptions.TeammateNotExistsException;
 import it.polste.attsw.teammatesmanagerbackend.exceptions.TeammateRestControllerExceptionHandler;
 import it.polste.attsw.teammatesmanagerbackend.models.PersonalData;
@@ -14,24 +14,23 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.context.request.WebRequest;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.when;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.empty;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TeammateRestControllerTest {
@@ -42,17 +41,14 @@ public class TeammateRestControllerTest {
   @InjectMocks
   private TeammateRestController teammateRestController;
 
-  @Mock
+  @InjectMocks
   private TeammateRestControllerExceptionHandler teammateRestControllerExceptionHandler;
 
   private PersonalData stefanosData;
   private PersonalData paolosData;
   private Set<Skill> skills;
 
-  ResponseEntity<Object> responseEntityWhenAlreadyExistingTeammate;
-  ResponseEntity<Object> responseEntityWhenTeammateNotExists;
-
-  private String alreadyExistingTeammateMessage;
+  private String teammateAlreadyExistsMessage;
   private String teammateNotExistsMessage;
 
   @Before
@@ -78,28 +74,9 @@ public class TeammateRestControllerTest {
     skills.add(new Skill(1L, "Spring Boot"));
     skills.add(new Skill(2L, "Vue js"));
 
-    alreadyExistingTeammateMessage =
+    teammateAlreadyExistsMessage =
             "The entered email has already been associated with a Teammate";
     teammateNotExistsMessage = "No Teammate with id 1 exists!";
-
-    HttpHeaders responseHeader = new HttpHeaders();
-    responseHeader.setContentType(MediaType.APPLICATION_JSON);
-
-    Map<String, String> responseBody = new HashMap<>();
-    responseBody.put("message", alreadyExistingTeammateMessage);
-    responseEntityWhenAlreadyExistingTeammate = new ResponseEntity<>(
-            responseBody,
-            responseHeader,
-            HttpStatus.INTERNAL_SERVER_ERROR
-    );
-
-    responseBody = new HashMap<>();
-    responseBody.put("message", teammateNotExistsMessage);
-    responseEntityWhenTeammateNotExists = new ResponseEntity<>(
-            responseBody,
-            responseHeader,
-            HttpStatus.INTERNAL_SERVER_ERROR
-    );
   }
 
   @Test
@@ -107,7 +84,7 @@ public class TeammateRestControllerTest {
     when().
             get("/api/teammates").
     then().
-            statusCode(200).
+            statusCode(HttpStatus.OK.value()).
             assertThat().
             body("", empty());
   }
@@ -123,7 +100,7 @@ public class TeammateRestControllerTest {
     when().
             get("/api/teammates").
     then().
-            statusCode(200).
+            statusCode(HttpStatus.OK.value()).
             assertThat().
             body(
                     "id", hasItems(1, 2),
@@ -157,7 +134,7 @@ public class TeammateRestControllerTest {
     when().
             post("/api/teammates/new").
     then().
-            statusCode(200).
+            statusCode(HttpStatus.OK.value()).
             assertThat().
             body(
                     "id", equalTo(1),
@@ -178,11 +155,7 @@ public class TeammateRestControllerTest {
     Teammate teammateToInsert = new Teammate(null, stefanosData, skills);
 
     when(teammateService.insertNewTeammate(any(Teammate.class)))
-            .thenThrow(new AlreadyExistingTeammateException(alreadyExistingTeammateMessage));
-
-    when(teammateRestControllerExceptionHandler.handleTeammateException(
-            any(AlreadyExistingTeammateException.class), any(WebRequest.class)))
-            .thenReturn(responseEntityWhenAlreadyExistingTeammate);
+            .thenThrow(new TeammateAlreadyExistsException(teammateAlreadyExistsMessage));
 
     given().
             contentType(MediaType.APPLICATION_JSON_VALUE).
@@ -190,9 +163,9 @@ public class TeammateRestControllerTest {
     when().
             post("/api/teammates/new").
     then().
-            statusCode(500).
+            statusCode(HttpStatus.FORBIDDEN.value()).
             assertThat().
-            body("message", equalTo(alreadyExistingTeammateMessage));
+            body("message", equalTo(teammateAlreadyExistsMessage));
   }
 
   @Test
@@ -208,7 +181,7 @@ public class TeammateRestControllerTest {
     when().
             put("/api/teammates/update/1").
     then().
-            statusCode(200).
+            statusCode(HttpStatus.OK.value()).
             assertThat().
             body(
                     "id", equalTo(1),
@@ -231,17 +204,13 @@ public class TeammateRestControllerTest {
     when(teammateService.updateTeammate(anyLong(), any(Teammate.class)))
             .thenThrow(new TeammateNotExistsException(teammateNotExistsMessage));
 
-    when(teammateRestControllerExceptionHandler.handleTeammateException(
-            any(TeammateNotExistsException.class), any(WebRequest.class)))
-            .thenReturn(responseEntityWhenTeammateNotExists);
-
     given().
             contentType(MediaType.APPLICATION_JSON_VALUE).
             body(teammateToUpdate).
     when().
             put("/api/teammates/update/1").
     then().
-            statusCode(500).
+            statusCode(HttpStatus.NOT_FOUND.value()).
             assertThat().
             body("message", equalTo(teammateNotExistsMessage));
   }
@@ -251,11 +220,7 @@ public class TeammateRestControllerTest {
     Teammate teammateToUpdate = new Teammate(null, stefanosData, skills);
 
     when(teammateService.updateTeammate(anyLong(), any(Teammate.class)))
-            .thenThrow(new AlreadyExistingTeammateException(alreadyExistingTeammateMessage));
-
-    when(teammateRestControllerExceptionHandler.handleTeammateException(
-            any(AlreadyExistingTeammateException.class), any(WebRequest.class)))
-            .thenReturn(responseEntityWhenAlreadyExistingTeammate);
+            .thenThrow(new TeammateAlreadyExistsException(teammateAlreadyExistsMessage));
 
     given().
             contentType(MediaType.APPLICATION_JSON_VALUE).
@@ -263,9 +228,9 @@ public class TeammateRestControllerTest {
     when().
             put("/api/teammates/update/1").
     then().
-            statusCode(500).
+            statusCode(HttpStatus.FORBIDDEN.value()).
             assertThat().
-            body("message", equalTo(alreadyExistingTeammateMessage));
+            body("message", equalTo(teammateAlreadyExistsMessage));
   }
 
   @Test
@@ -273,7 +238,7 @@ public class TeammateRestControllerTest {
     when().
             delete("api/teammates/delete/1").
     then().
-            statusCode(200);
+            statusCode(HttpStatus.OK.value());
 
     verify(teammateService, times(1)).deleteTeammate(1L);
   }
@@ -283,14 +248,10 @@ public class TeammateRestControllerTest {
     doThrow(new TeammateNotExistsException(teammateNotExistsMessage))
             .when(teammateService).deleteTeammate(1L);
 
-    when(teammateRestControllerExceptionHandler.handleTeammateException(
-            any(TeammateNotExistsException.class), any(WebRequest.class)))
-            .thenReturn(responseEntityWhenTeammateNotExists);
-
     when().
             delete("api/teammates/delete/1").
     then().
-            statusCode(500).
+            statusCode(HttpStatus.NOT_FOUND.value()).
             assertThat().
             body("message", equalTo(teammateNotExistsMessage));
   }
