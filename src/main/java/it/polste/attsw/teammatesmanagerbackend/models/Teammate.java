@@ -1,6 +1,7 @@
 package it.polste.attsw.teammatesmanagerbackend.models;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -13,20 +14,23 @@ public class Teammate {
   @Embedded
   private PersonalData personalData;
 
-  @OneToMany(mappedBy = "teammate_skills")
-  private Set<Skill> skills;
+  @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+  @JoinTable(name = "teammate_skills",
+          joinColumns = { @JoinColumn(name = "teammate_id") },
+          inverseJoinColumns = { @JoinColumn(name = "skill_id") })
+  private Set<Skill> skills = new HashSet<>();
 
   public Teammate() {}
 
-    public Teammate(Long id, PersonalData personalData, Set<Skill> skills){
-        this.id = id;
-        this.personalData = personalData;
-        this.skills = skills;
-    }
+  public Teammate(Long id, PersonalData personalData, Set<Skill> skills) {
+    this.id = id;
+    this.personalData = personalData;
+    this.skills = skills;
+  }
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
   public void setId(Long id) {
     this.id = id;
@@ -36,11 +40,15 @@ public class Teammate {
     return personalData;
   }
 
-    public void setPersonalData(PersonalData personalData) {
-        this.personalData = personalData;
-    }
+  public void setPersonalData(PersonalData personalData) {
+    this.personalData = personalData;
+  }
 
-    public Set<Skill> getSkills() { return skills; }
+  public Set<Skill> getSkills() {
+    return skills;
+  }
 
-    public void setSkills(Set<Skill> skills) { this.skills = skills; }
+  public void setSkills(Set<Skill> skills) {
+    this.skills = skills;
+  }
 }

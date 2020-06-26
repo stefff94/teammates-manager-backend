@@ -1,5 +1,6 @@
 package it.polste.attsw.teammatesmanagerbackend.models;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.util.Objects;
 
@@ -8,6 +9,7 @@ public class PersonalData {
 
   private String name;
 
+  @Column(unique = true)
   private String email;
 
   private String gender;
@@ -75,6 +77,11 @@ public class PersonalData {
 
   public void setPhotoUrl(String photoUrl) {
     this.photoUrl = photoUrl;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name, email, gender, city, role, photoUrl);
   }
 
   @Override

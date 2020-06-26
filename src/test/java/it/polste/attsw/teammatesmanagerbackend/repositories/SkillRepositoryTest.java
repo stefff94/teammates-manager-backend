@@ -39,7 +39,7 @@ public class SkillRepositoryTest {
   public void saveAndReadRecordWithRepositoryTest() {
     Skill persistedSkill = skillRepository.save(skill);
     List<Skill> skills = skillRepository.findAll();
-    assertThat(skills).containsExactly(persistedSkill);
+    assertThat(skills).containsOnlyOnce(persistedSkill);
 
     logger.info("Persisted and retrieved entity with id: "
             + skills.get(0).getId());
@@ -49,7 +49,7 @@ public class SkillRepositoryTest {
   public void saveWithTestEntityManagerAndReadWithRepositoryTest() {
     Skill persistedSkill = testEntityManager.persistFlushFind(skill);
     List<Skill> skills = skillRepository.findAll();
-    assertThat(skills).containsExactly(persistedSkill);
+    assertThat(skills).containsOnlyOnce(persistedSkill);
 
     logger.info("Persisted and retrieved entity with id: "
             + skills.get(0).getId());
