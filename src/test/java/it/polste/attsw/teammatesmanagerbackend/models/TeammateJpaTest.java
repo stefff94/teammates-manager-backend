@@ -58,7 +58,7 @@ public class TeammateJpaTest {
     assertThat(teammate.getSkills())
             .containsExactlyInAnyOrderElementsOf(skills);
     assertThat(teammate.getId()).isNotNull();
-    assertThat(teammate.getId()).isGreaterThan(0);
+    assertThat(teammate.getId()).isPositive();
 
     logger.info("Persisted entity with id:" + teammate.getId());
   }

@@ -29,7 +29,7 @@ public class SkillJpaTest {
 
     assertThat(skill.getName()).isEqualTo("Spring Boot");
     assertThat(skill.getId()).isNotNull();
-    assertThat(skill.getId()).isGreaterThan(0);
+    assertThat(skill.getId()).isPositive();
 
     logger.info("Persisted entity with id: " + skill.getId());
   }

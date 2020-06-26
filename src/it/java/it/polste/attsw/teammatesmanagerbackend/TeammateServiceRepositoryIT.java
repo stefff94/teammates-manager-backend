@@ -54,8 +54,8 @@ public class TeammateServiceRepositoryIT {
         skills.add(new Skill(2L, "skills"));
         Teammate updated = teammateService.updateTeammate(saved.getId(),
                 new Teammate(saved.getId(), personalData, skills));
-        assertThat(teammateRepository.findById(saved.getId()).get())
-                .isEqualTo(updated);
+        assertThat(teammateRepository.findAll())
+                .contains(updated);
     }
 
     @Test
