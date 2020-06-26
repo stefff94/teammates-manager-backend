@@ -3,6 +3,7 @@ package it.polste.attsw.teammatesmanagerbackend;
 import it.polste.attsw.teammatesmanagerbackend.models.PersonalData;
 import it.polste.attsw.teammatesmanagerbackend.models.Skill;
 import it.polste.attsw.teammatesmanagerbackend.models.Teammate;
+import it.polste.attsw.teammatesmanagerbackend.repositories.SkillRepository;
 import it.polste.attsw.teammatesmanagerbackend.repositories.TeammateRepository;
 import it.polste.attsw.teammatesmanagerbackend.services.SkillService;
 import it.polste.attsw.teammatesmanagerbackend.services.TeammateService;
@@ -27,6 +28,9 @@ public class TeammateServiceRepositoryIT {
     private TeammateService teammateService;
 
     @Autowired
+    private SkillRepository skillRepository;
+
+    @Autowired
     private TeammateRepository teammateRepository;
 
     private PersonalData personalData;
@@ -46,6 +50,8 @@ public class TeammateServiceRepositoryIT {
                 .insertNewTeammate(new Teammate(null, personalData, skills));
         assertThat(teammateRepository.findById(saved.getId()))
                 .isPresent();
+        assertThat(skillRepository.findAll())
+                .containsAll(skills);
     }
 
     @Test
@@ -56,6 +62,8 @@ public class TeammateServiceRepositoryIT {
                 new Teammate(saved.getId(), personalData, skills));
         assertThat(teammateRepository.findAll())
                 .contains(updated);
+        assertThat(skillRepository.findAll())
+                .containsAll(skills);
     }
 
     @Test
