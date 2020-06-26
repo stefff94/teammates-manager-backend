@@ -75,7 +75,7 @@ public class TeammateRepositoryTest {
   public void findTeammateByEmailTest() {
     Teammate persistedTeammate = testEntityManager.persistFlushFind(teammate);
     Teammate foundTeammate = teammateRepository
-            .findByPersonalDataEmail("stefano.vannucchi@stud.unifi.it");
+            .findByPersonalDataEmail("stefano.vannucchi@stud.unifi.it").get();
 
     assertThat(foundTeammate).isEqualTo(persistedTeammate);
 

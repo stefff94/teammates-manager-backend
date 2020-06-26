@@ -33,7 +33,7 @@ public class TeammateService {
 
     private boolean teammateMailExists(Teammate teammate) {
         String mail = teammate.getPersonalData().getEmail();
-        Optional<Teammate> existingMail = teammateRepository.findByMail(mail);
+        Optional<Teammate> existingMail = teammateRepository.findByPersonalDataEmail(mail);
         return existingMail.isPresent();
     }
 

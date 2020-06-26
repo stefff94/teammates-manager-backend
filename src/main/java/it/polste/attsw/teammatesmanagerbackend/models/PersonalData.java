@@ -9,7 +9,7 @@ public class PersonalData {
 
   private String name;
 
-  @Column(unique = true)
+  @Column(unique = true, length = 100)
   private String email;
 
   private String gender;
