@@ -3,7 +3,6 @@ package it.polste.attsw.teammatesmanagerbackend;
 import it.polste.attsw.teammatesmanagerbackend.models.PersonalData;
 import it.polste.attsw.teammatesmanagerbackend.models.Skill;
 import it.polste.attsw.teammatesmanagerbackend.models.Teammate;
-import it.polste.attsw.teammatesmanagerbackend.repositories.SkillRepository;
 import it.polste.attsw.teammatesmanagerbackend.repositories.TeammateRepository;
 import it.polste.attsw.teammatesmanagerbackend.services.SkillService;
 import it.polste.attsw.teammatesmanagerbackend.services.TeammateService;
@@ -57,5 +56,12 @@ public class TeammateServiceRepositoryIT {
                 new Teammate(saved.getId(), personalData, skills));
         assertThat(teammateRepository.findById(saved.getId()).get())
                 .isEqualTo(updated);
+    }
+
+    @Test
+    public void serviceDeletesFromRepositoryITTest(){
+        Teammate saved = teammateRepository.save(new Teammate(null, personalData, skills));
+        teammateService.deleteTeammate(saved.getId());
+        assertThat(teammateRepository.findAll()).doesNotContain(saved);
     }
 }

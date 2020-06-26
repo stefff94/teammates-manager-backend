@@ -33,13 +33,12 @@ public class TeammateService {
 
     private boolean teammateMailIsDuplicate(Teammate teammate, Long id) {
         String mail = teammate.getPersonalData().getEmail();
-        Optional<Teammate> existingMail = teammateRepository.findByMail(mail);
+        Optional<Teammate> existingMail = teammateRepository.findByPersonalDataEmail(mail);
         if(existingMail.isPresent() && id != null && existingMail.get().getId().equals(id)){
             return false;
         }else{
             return existingMail.isPresent();
         }
-
     }
 
     private Teammate setTeammateData(Long id, Teammate teammate){
