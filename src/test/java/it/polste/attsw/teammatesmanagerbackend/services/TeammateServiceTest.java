@@ -149,6 +149,8 @@ public class TeammateServiceTest {
                 .thenReturn(savedSkill);
         when(teammateRepository.findById(1L))
                 .thenReturn(Optional.of(replaced));
+        when(teammateRepository.findByMail(any(String.class)))
+                .thenReturn(Optional.of(replaced));
         when(teammateRepository.save(any(Teammate.class)))
                 .thenReturn(replaced);
 
