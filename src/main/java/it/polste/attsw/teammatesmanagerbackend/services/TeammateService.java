@@ -39,7 +39,6 @@ public class TeammateService {
         }else{
             return existingMail.isPresent();
         }
-
     }
 
     private Teammate setTeammateData(Long id, Teammate teammate){
