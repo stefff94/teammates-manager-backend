@@ -17,7 +17,7 @@
 	<properties>
 		<java.version>1.8</java.version>
 
-		<skip.unit-tests>true</skip.unit-tests>
+		<skip.unit-tests>false</skip.unit-tests>
 		<skip.integration-tests>false</skip.integration-tests>
 
 		<jacoco.version>0.8.5</jacoco.version>
@@ -278,7 +278,7 @@
 							</execution>
 						</executions>
 						<configuration>
-							<skip>true</skip>
+							<skip>false</skip>
 							<targetClasses>
 								<param>it.polste.attsw.teammatesmanagerbackend.services.*</param>
 								<param>it.polste.attsw.teammatesmanagerbackend.repositories.*</param>
