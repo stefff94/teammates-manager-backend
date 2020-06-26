@@ -177,7 +177,7 @@ public class TeammateServiceTest {
     }
 
     @Test
-    public void updateTeammateByIdThrowsIllegalArgumentExceptionIfMailExistsTest(){
+    public void updateTeammateByIdThrowsIllegalArgumentExceptionIfMailExistsForDifferentIdTest(){
         Teammate saved = new Teammate(1L, personalData1, savedSkills);
         Teammate toSave = new Teammate(999L, personalData1, toSaveSkills);
         when(teammateRepository.findByPersonalDataEmail(saved.getPersonalData().getEmail()))
@@ -186,6 +186,6 @@ public class TeammateServiceTest {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("This mail has already been associated with a Teammate");
 
-        teammateService.updateTeammate(1L, toSave);
+        teammateService.updateTeammate(2L, toSave);
     }
 }
