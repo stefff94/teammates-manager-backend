@@ -15,7 +15,7 @@ public class TeammateRepository {
 
     public Optional<Teammate> findById(Long id){ throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION); }
 
-    public Optional<Teammate> findByMail(String mail){ throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION); }
+    public Optional<Teammate> findByPersonalDataEmail(String mail){ throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION); }
 
     public Teammate save(Teammate teammate){ throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION); }
 
