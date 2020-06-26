@@ -1,16 +1,21 @@
 package it.polste.attsw.teammatesmanagerbackend.models;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "skills")
 public class Skill {
 
+  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   private String name;
 
   public Skill() {}
 
-  public Skill(Long id, String skillName) {
+  public Skill(Long id, String name) {
     this.id = id;
-    this.name = skillName;
+    this.name = name;
   }
 
   public Long getId() {

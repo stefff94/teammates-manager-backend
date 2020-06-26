@@ -1,14 +1,22 @@
 package it.polste.attsw.teammatesmanagerbackend.models;
 
+import javax.persistence.*;
 import java.util.Set;
 
+@Entity
+@Table(name = "teammates")
 public class Teammate {
 
-    private Long id;
+  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    private PersonalData personalData;
+  @Embedded
+  private PersonalData personalData;
 
-    private Set<Skill> skills;
+  @OneToMany(mappedBy = "teammate_skills")
+  private Set<Skill> skills;
+
+  public Teammate() {}
 
     public Teammate(Long id, PersonalData personalData, Set<Skill> skills){
         this.id = id;
@@ -20,13 +28,13 @@ public class Teammate {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public PersonalData getPersonalData() {
-        return personalData;
-    }
+  public PersonalData getPersonalData() {
+    return personalData;
+  }
 
     public void setPersonalData(PersonalData personalData) {
         this.personalData = personalData;

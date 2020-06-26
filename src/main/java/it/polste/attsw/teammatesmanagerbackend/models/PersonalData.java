@@ -1,5 +1,9 @@
 package it.polste.attsw.teammatesmanagerbackend.models;
 
+import javax.persistence.Embeddable;
+import java.util.Objects;
+
+@Embeddable
 public class PersonalData {
 
   private String name;
@@ -14,7 +18,9 @@ public class PersonalData {
 
   private String photoUrl;
 
-  public PersonalData(String name, String email, String gender, String city, String role, String photoUrl){
+  public PersonalData() {}
+
+  public PersonalData(String name, String email, String gender, String city, String role, String photoUrl) {
     this.name = name;
     this.email = email;
     this.gender = gender;
@@ -69,5 +75,22 @@ public class PersonalData {
 
   public void setPhotoUrl(String photoUrl) {
     this.photoUrl = photoUrl;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    PersonalData other = (PersonalData) obj;
+    return Objects.equals(name, other.name)
+            && Objects.equals(email, other.email)
+            && Objects.equals(gender, other.gender)
+            && Objects.equals(city, other.city)
+            && Objects.equals(role, other.role)
+            && Objects.equals(photoUrl, other.photoUrl);
   }
 }
