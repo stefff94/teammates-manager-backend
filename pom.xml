@@ -105,6 +105,11 @@
 			<version>${pitest.version}</version>
 			<type>pom</type>
 		</dependency>
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>spring-mock-mvc</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -282,10 +287,13 @@
 							<targetClasses>
 								<param>it.polste.attsw.teammatesmanagerbackend.services.*</param>
 								<param>it.polste.attsw.teammatesmanagerbackend.repositories.*</param>
+								<param>it.polste.attsw.teammatesmanagerbackend.controllers.*</param>
+								<param>it.polste.attsw.teammatesmanagerbackend.exceptions.*</param>
 							</targetClasses>
 							<targetTests>
 								<param>it.polste.attsw.teammatesmanagerbackend.services.*Test</param>
 								<param>it.polste.attsw.teammatesmanagerbackend.repositories.*Test</param>
+								<param>it.polste.attsw.teammatesmanagerbackend.controllers.*Test</param>
 							</targetTests>
 							<mutators>
 								<mutator>DEFAULTS</mutator>
