@@ -5,6 +5,7 @@ import io.restassured.response.Response;
 import it.polste.attsw.teammatesmanagerbackend.models.PersonalData;
 import it.polste.attsw.teammatesmanagerbackend.models.Skill;
 import it.polste.attsw.teammatesmanagerbackend.models.Teammate;
+import it.polste.attsw.teammatesmanagerbackend.repositories.SkillRepository;
 import it.polste.attsw.teammatesmanagerbackend.repositories.TeammateRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,6 +35,9 @@ public class TeammateRestControllerIT {
   @Autowired
   private TeammateRepository teammateRepository;
 
+  @Autowired
+  private SkillRepository skillRepository;
+
   @LocalServerPort
   private int port;
 
@@ -46,6 +50,8 @@ public class TeammateRestControllerIT {
     RestAssured.port = port;
 
     // start all tests with an empty database
+    skillRepository.deleteAll();
+    skillRepository.flush();
     teammateRepository.deleteAll();
     teammateRepository.flush();
 
@@ -64,8 +70,11 @@ public class TeammateRestControllerIT {
             "https://semantic-ui.com/images/avatar/large/elliot.jpg");
 
     skills = new HashSet<>();
-    skills.add(new Skill(1L, "Java"));
-    skills.add(new Skill(2L, "Vue js"));
+
+    skills.add(skillRepository
+            .save(new Skill(null, "Artificial Intelligence")));
+    skills.add(skillRepository
+            .save(new Skill(null, "Cyber Security")));
   }
 
   @Test
@@ -114,7 +123,7 @@ public class TeammateRestControllerIT {
                     "personalData.photoUrl", equalTo(
                             "https://semantic-ui.com/images/avatar/large/elliot.jpg"),
                     "skills.id", hasItems(savedSkills.get(0), savedSkills.get(1)),
-                    "skills.name", hasItems("Java", "Vue js")
+                    "skills.name", hasItems("Artificial Intelligence", "Cyber Security")
             );
   }
 
