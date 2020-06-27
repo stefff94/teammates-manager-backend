@@ -2,6 +2,7 @@ package it.polste.attsw.teammatesmanagerbackend.models;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -50,5 +51,24 @@ public class Teammate {
 
   public void setSkills(Set<Skill> skills) {
     this.skills = skills;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, personalData, skills);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    Teammate other = (Teammate) obj;
+    return Objects.equals(id, other.id)
+            && Objects.equals(personalData, other.personalData)
+            && Objects.equals(skills, other.skills);
   }
 }
