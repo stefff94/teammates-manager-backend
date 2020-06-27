@@ -89,8 +89,8 @@ public class TeammateRestControllerIT {
 
     Teammate savedTeammate = response.getBody().as(Teammate.class);
 
-    assertThat(teammateRepository.findById(savedTeammate.getId()).get())
-            .isEqualTo(savedTeammate);
+    assertThat(teammateRepository.findById(savedTeammate.getId()))
+            .contains(savedTeammate);
   }
 
   @Test
