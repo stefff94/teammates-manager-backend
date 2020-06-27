@@ -48,6 +48,15 @@
 			**/models/*,
 			**/repositories/*
 		</sonar.coverage.exclusions>
+		<sonar.issue.ignore.multicriteria>e12</sonar.issue.ignore.multicriteria>
+		<!-- 'Persistent entities should not be used as arguments of "@RequestMapping" methods',
+		  in this example project we ignore this rule -->
+		<sonar.issue.ignore.multicriteria.e12.ruleKey>
+			java:S4684
+		</sonar.issue.ignore.multicriteria.e12.ruleKey>
+		<sonar.issue.ignore.multicriteria.e12.resourceKey>
+			**/*Controller.java
+		</sonar.issue.ignore.multicriteria.e12.resourceKey>
 	</properties>
 
 	<dependencies>
