@@ -1,5 +1,7 @@
 package it.polste.attsw.teammatesmanagerbackend.services;
 
+import it.polste.attsw.teammatesmanagerbackend.exceptions.TeammateAlreadyExistsException;
+import it.polste.attsw.teammatesmanagerbackend.exceptions.TeammateNotExistsException;
 import it.polste.attsw.teammatesmanagerbackend.models.PersonalData;
 import it.polste.attsw.teammatesmanagerbackend.models.Skill;
 import it.polste.attsw.teammatesmanagerbackend.models.Teammate;
@@ -112,7 +114,7 @@ public class TeammateServiceTest {
 
         when(teammateRepository.findByPersonalDataEmail(toSave.getPersonalData().getEmail()))
                 .thenReturn(Optional.of(saved));
-        thrown.expect(IllegalArgumentException.class);
+        thrown.expect(TeammateAlreadyExistsException.class);
         thrown.expectMessage("This mail has already been associated with a Teammate");
 
         teammateService.insertNewTeammate(toSave);
@@ -134,7 +136,7 @@ public class TeammateServiceTest {
         when(teammateRepository.findById(any(Long.class)))
                 .thenReturn(Optional.empty());
 
-        thrown.expect(IllegalArgumentException.class);
+        thrown.expect(TeammateNotExistsException.class);
         thrown.expectMessage("No Teammate with id 1 exists!");
 
         teammateService.deleteTeammate(1L);
@@ -172,7 +174,7 @@ public class TeammateServiceTest {
         when(teammateRepository.findById(any(Long.class)))
                 .thenReturn(Optional.empty());
 
-        thrown.expect(IllegalArgumentException.class);
+        thrown.expect(TeammateNotExistsException.class);
         thrown.expectMessage("No Teammate with id 1 exists!");
 
         teammateService.updateTeammate(1L, toSave);
@@ -185,7 +187,7 @@ public class TeammateServiceTest {
         when(teammateRepository.findByPersonalDataEmail(saved.getPersonalData().getEmail()))
                 .thenReturn(Optional.of(saved));
 
-        thrown.expect(IllegalArgumentException.class);
+        thrown.expect(TeammateAlreadyExistsException.class);
         thrown.expectMessage("This mail has already been associated with a Teammate");
 
         teammateService.updateTeammate(2L, toSave);

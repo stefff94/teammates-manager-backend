@@ -1,5 +1,7 @@
 package it.polste.attsw.teammatesmanagerbackend.services;
 
+import it.polste.attsw.teammatesmanagerbackend.exceptions.TeammateAlreadyExistsException;
+import it.polste.attsw.teammatesmanagerbackend.exceptions.TeammateNotExistsException;
 import it.polste.attsw.teammatesmanagerbackend.models.Skill;
 import it.polste.attsw.teammatesmanagerbackend.models.Teammate;
 import it.polste.attsw.teammatesmanagerbackend.repositories.TeammateRepository;
@@ -27,7 +29,7 @@ public class TeammateService {
             return setTeammateData(null, teammate);
         }else{
             String message = "This mail has already been associated with a Teammate";
-            throw new IllegalArgumentException(message);
+            throw new TeammateAlreadyExistsException(message);
         }
     }
 
@@ -60,7 +62,7 @@ public class TeammateService {
     public Teammate updateTeammate(Long id, Teammate teammate){
         if(teammateMailIsDuplicate(teammate, id)){
             String message = "This mail has already been associated with a Teammate";
-            throw new IllegalArgumentException(message);
+            throw new TeammateAlreadyExistsException(message);
         }
 
         Optional<Teammate> existingTeammate = teammateRepository.findById(id);
@@ -68,7 +70,7 @@ public class TeammateService {
             return setTeammateData(id, teammate);
         }else{
             String message = "No Teammate with id " + id + " exists!";
-            throw new IllegalArgumentException(message);
+            throw new TeammateNotExistsException(message);
         }
     }
 
@@ -79,7 +81,7 @@ public class TeammateService {
             teammateRepository.deleteById(id);
         }else{
             String message = "No Teammate with id " + id + " exists!";
-            throw new IllegalArgumentException(message);
+            throw new TeammateNotExistsException(message);
         }
 
     }
