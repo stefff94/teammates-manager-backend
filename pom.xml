@@ -43,6 +43,20 @@
 			${project.build.testSourceDirectory},
 			${basedir}/src/it/java
 		</sonar.tests>
+		<sonar.coverage.exclusions>
+			**/*Application.*,
+			**/models/*,
+			**/repositories/*
+		</sonar.coverage.exclusions>
+		<sonar.issue.ignore.multicriteria>e12</sonar.issue.ignore.multicriteria>
+		<!-- 'Persistent entities should not be used as arguments of "@RequestMapping" methods',
+		  in this example project we ignore this rule -->
+		<sonar.issue.ignore.multicriteria.e12.ruleKey>
+			java:S4684
+		</sonar.issue.ignore.multicriteria.e12.ruleKey>
+		<sonar.issue.ignore.multicriteria.e12.resourceKey>
+			**/*Controller.java
+		</sonar.issue.ignore.multicriteria.e12.resourceKey>
 	</properties>
 
 	<dependencies>
@@ -70,6 +84,11 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
@@ -94,6 +113,11 @@
 			<artifactId>pitest-parent</artifactId>
 			<version>${pitest.version}</version>
 			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>spring-mock-mvc</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -126,7 +150,7 @@
 					</execution>
 					<execution>
 						<id>stopDB</id>
-						<phase>verify</phase>
+						<phase>post-integration-test</phase>
 						<goals>
 							<goal>stop</goal>
 						</goals>
@@ -268,13 +292,17 @@
 							</execution>
 						</executions>
 						<configuration>
+							<skip>false</skip>
 							<targetClasses>
-<!--								<param>it.polste.attsw.teammatesmanagerbackend.services.*</param>-->
-<!--								<param>it.polste.attsw.teammatesmanagerbackend.repositories.*</param>-->
-<!--								<param>it.polste.attsw.teammatesmanagerbackend.controllers.*</param>-->
+								<param>it.polste.attsw.teammatesmanagerbackend.services.*</param>
+								<param>it.polste.attsw.teammatesmanagerbackend.repositories.*</param>
+								<param>it.polste.attsw.teammatesmanagerbackend.controllers.*</param>
+								<param>it.polste.attsw.teammatesmanagerbackend.exceptions.*</param>
 							</targetClasses>
 							<targetTests>
-								<param>**/*Test.java</param>
+								<param>it.polste.attsw.teammatesmanagerbackend.services.*Test</param>
+								<param>it.polste.attsw.teammatesmanagerbackend.repositories.*Test</param>
+								<param>it.polste.attsw.teammatesmanagerbackend.controllers.*Test</param>
 							</targetTests>
 							<mutators>
 								<mutator>DEFAULTS</mutator>

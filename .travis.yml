@@ -19,7 +19,14 @@ cache:
   directories:
     - $HOME/.m2
 
+deploy:
+  provider: script
+  script:  "./mvnw clean heroku:deploy"
+  api_key: $HEROKU_API_KEY
+  on:
+    branch: master
+
 script:
-  - ./mvnw clean verify -Pjacoco && ./mvnw coveralls:report sonar:sonar && ./mvnw clean heroku:deploy
+  - ./mvnw clean verify -Pjacoco && ./mvnw coveralls:report sonar:sonar
 
 
