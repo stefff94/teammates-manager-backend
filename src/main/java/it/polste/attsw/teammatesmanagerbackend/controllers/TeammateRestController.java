@@ -11,7 +11,7 @@ import java.util.List;
 @RequestMapping("/api/teammates")
 public class TeammateRestController {
 
-  private TeammateService teammateService;
+  private final TeammateService teammateService;
 
   @Autowired
   public TeammateRestController(TeammateService teammateService) {
