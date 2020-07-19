@@ -46,6 +46,7 @@
 		</sonar.tests>
 		<sonar.coverage.exclusions>
 			**/*Application.*,
+			**/*Config.*,
 			**/models/*,
 			**/repositories/*
 		</sonar.coverage.exclusions>
@@ -269,6 +270,7 @@
 						<configuration>
 							<excludes>
 								<exclude>**/*Application.*</exclude>
+								<exclude>**/*Config.*</exclude>
 								<exclude>**/models/*</exclude>
 							</excludes>
 						</configuration>
