@@ -24,52 +24,59 @@ import java.util.HashSet;
 @Import({TeammateService.class, SkillService.class})
 public class TeammateServiceRepositoryIT {
 
-    @Autowired
-    private TeammateService teammateService;
+  @Autowired
+  private TeammateService teammateService;
 
-    @Autowired
-    private SkillRepository skillRepository;
+  @Autowired
+  private SkillRepository skillRepository;
 
-    @Autowired
-    private TeammateRepository teammateRepository;
+  @Autowired
+  private TeammateRepository teammateRepository;
 
-    private PersonalData personalData;
-    private HashSet<Skill> skills;
+  private PersonalData personalData;
+  private HashSet<Skill> skills;
 
-    @Before
-    public void setup(){
-        personalData = new PersonalData("name1", "mail1", "male", "city1",
-                "role1", "photoUrl1");
-        skills = new HashSet<>();
-        skills.add(new Skill(1L, "skill"));
-    }
+  @Before
+  public void setup(){
+    personalData = new PersonalData("name1", "mail1",
+            "male", "city1",
+            "role1", "photoUrl1");
+    skills = new HashSet<>();
+    skills.add(new Skill(1L, "skill"));
+  }
 
-    @Test
-    public void serviceInsertsIntoRepositoryITTest(){
-        Teammate saved = teammateService
-                .insertNewTeammate(new Teammate(null, personalData, skills));
-        assertThat(teammateRepository.findById(saved.getId()))
-                .isPresent();
-        assertThat(skillRepository.findAll())
-                .containsAll(skills);
-    }
+  @Test
+  public void serviceInsertsIntoRepositoryITTest() {
+    Teammate saved = teammateService
+            .insertNewTeammate(new Teammate(null, personalData, skills));
 
-    @Test
-    public void serviceUpdatesIntoRepositoryITTest(){
-        Teammate saved = teammateRepository.save(new Teammate(null, personalData, skills));
-        skills.add(new Skill(2L, "skills"));
-        Teammate updated = teammateService.updateTeammate(saved.getId(),
-                new Teammate(saved.getId(), personalData, skills));
-        assertThat(teammateRepository.findAll())
-                .contains(updated);
-        assertThat(skillRepository.findAll())
-                .containsAll(skills);
-    }
+    assertThat(teammateRepository.findById(saved.getId()))
+            .isPresent();
+    assertThat(skillRepository.findAll())
+            .containsAll(skills);
+  }
 
-    @Test
-    public void serviceDeletesFromRepositoryITTest(){
-        Teammate saved = teammateRepository.save(new Teammate(null, personalData, skills));
-        teammateService.deleteTeammate(saved.getId());
-        assertThat(teammateRepository.findAll()).doesNotContain(saved);
-    }
+  @Test
+  public void serviceUpdatesIntoRepositoryITTest() {
+    Teammate saved = teammateRepository
+            .save(new Teammate(null, personalData, skills));
+    skills.add(new Skill(2L, "skills"));
+    Teammate updated = teammateService.updateTeammate(saved.getId(),
+            new Teammate(saved.getId(), personalData, skills));
+
+    assertThat(teammateRepository.findAll())
+            .contains(updated);
+    assertThat(skillRepository.findAll())
+            .containsAll(skills);
+  }
+
+  @Test
+  public void serviceDeletesFromRepositoryITTest() {
+    Teammate saved = teammateRepository
+            .save(new Teammate(null, personalData, skills));
+    teammateService.deleteTeammate(saved.getId());
+
+    assertThat(teammateRepository.findAll()).doesNotContain(saved);
+  }
+
 }

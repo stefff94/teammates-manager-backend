@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,7 +34,6 @@ public class TeammateRepositoryTest {
   private TestEntityManager testEntityManager;
 
   private Teammate teammate;
-  private Set<Skill> skills;
 
   @Before
   public void setup() {
@@ -44,7 +44,7 @@ public class TeammateRepositoryTest {
             "student",
             "https://semantic-ui.com/images/avatar/large/steve.jpg");
 
-    skills = new HashSet<>();
+    Set<Skill> skills = new HashSet<>();
     skills.add(new Skill(1L, "Java"));
     skills.add(new Skill(2L, "Vue js"));
 
@@ -74,8 +74,15 @@ public class TeammateRepositoryTest {
   @Test
   public void findTeammateByEmailTest() {
     Teammate persistedTeammate = testEntityManager.persistFlushFind(teammate);
-    Teammate foundTeammate = teammateRepository
-            .findByPersonalDataEmail("stefano.vannucchi@stud.unifi.it").get();
+
+    Teammate foundTeammate = new Teammate();
+
+    final Optional<Teammate> toFindTeammate = teammateRepository
+            .findByPersonalDataEmail("stefano.vannucchi@stud.unifi.it");
+
+    if (toFindTeammate.isPresent()) {
+      foundTeammate = toFindTeammate.get();
+    }
 
     assertThat(foundTeammate).isEqualTo(persistedTeammate);
 

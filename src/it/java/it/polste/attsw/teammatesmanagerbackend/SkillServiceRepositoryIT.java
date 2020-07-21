@@ -16,18 +16,19 @@ import org.springframework.test.context.junit4.SpringRunner;
 @Import(SkillService.class)
 public class SkillServiceRepositoryIT {
 
-    @Autowired
-    private SkillService skillService;
+  @Autowired
+  private SkillService skillService;
 
-    @Autowired
-    private SkillRepository skillRepository;
+  @Autowired
+  private SkillRepository skillRepository;
 
-    @Test
-    public void serviceInsertsIntoRepositoryITTest(){
-        Skill saved = skillService.insertNewSkill(new Skill(null, "skillName"));
-        assertThat(skillRepository.findById(saved.getId()))
-                .isPresent();
-    }
+  @Test
+  public void serviceInsertsIntoRepositoryITTest() {
+    Skill saved = skillService
+            .insertNewSkill(new Skill(null, "skillName"));
 
+    assertThat(skillRepository.findById(saved.getId()))
+            .isPresent();
+  }
 
 }

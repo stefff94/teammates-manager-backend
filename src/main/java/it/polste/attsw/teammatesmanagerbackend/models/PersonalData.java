@@ -22,7 +22,13 @@ public class PersonalData {
 
   public PersonalData() {}
 
-  public PersonalData(String name, String email, String gender, String city, String role, String photoUrl) {
+  public PersonalData(String name,
+                      String email,
+                      String gender,
+                      String city,
+                      String role,
+                      String photoUrl) {
+
     this.name = name;
     this.email = email;
     this.gender = gender;

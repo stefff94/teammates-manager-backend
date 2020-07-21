@@ -15,7 +15,8 @@ public class Teammate {
   @Embedded
   private PersonalData personalData;
 
-  @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+  @ManyToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.MERGE, CascadeType.REFRESH})
   @JoinTable(name = "teammate_skills",
           joinColumns = { @JoinColumn(name = "teammate_id") },
           inverseJoinColumns = { @JoinColumn(name = "skill_id") })
@@ -23,7 +24,10 @@ public class Teammate {
 
   public Teammate() {}
 
-  public Teammate(Long id, PersonalData personalData, Set<Skill> skills) {
+  public Teammate(Long id,
+                  PersonalData personalData,
+                  Set<Skill> skills) {
+
     this.id = id;
     this.personalData = personalData;
     this.skills = skills;
