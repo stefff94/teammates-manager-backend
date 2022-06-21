@@ -24,7 +24,7 @@
 		<heroku.version>3.0.2</heroku.version>
 		<coveralls.version>4.3.0</coveralls.version>
 		<sonar.version>3.7.0.1746</sonar.version>
-		<mysql.version>8.0.20</mysql.version>
+		<mysql.version>8.0.28</mysql.version>
 		<frabric8.docker.version>0.33.0</frabric8.docker.version>
 		<pitest.version>1.5.2</pitest.version>
 
